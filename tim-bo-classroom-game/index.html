@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' ws: wss:; media-src 'self';">
+  <title>Tìm Bò - Let's Save the Cows! (Game Lớp Học Online)</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="top-bar">
+    <div class="brand">
+      <div class="brand-icon">
+        <img src="assets/images/image18.svg" alt="Bò logo" />
+      </div>
+      <div>
+        <h1>Tìm Bò Không Gian</h1>
+        <span class="brand-badge">Classroom Game</span>
+      </div>
+    </div>
+    <div class="top-actions">
+      <button id="mute-btn" class="icon-btn" title="Bật/Tắt âm thanh">🔊</button>
+    </div>
+  </header>
+
+  <main class="container" style="max-width: 860px; justify-content: center;">
+    <!-- Banner Hero -->
+    <div class="card hero-section" style="margin-bottom: 28px;">
+      <div style="display: flex; justify-content: center; gap: 20px; align-items: center; margin-bottom: 20px;">
+        <img src="assets/images/image18.svg" class="hero-img" style="width: 110px; height: 110px; margin: 0;" alt="Chú bò" />
+        <img src="assets/images/image6.svg" class="hero-img" style="width: 95px; height: 95px; margin: 0; animation-delay: -2s;" alt="UFO" />
+        <img src="assets/images/image26.svg" class="hero-img" style="width: 85px; height: 85px; margin: 0; animation-delay: -1s;" alt="Alien" />
+      </div>
+
+      <h2 style="font-size: 2.2rem; font-weight: 900; color: #fff; margin-bottom: 12px; letter-spacing: 0.5px;">
+        TÌM BÒ: LET'S SAVE THE COWS!
+      </h2>
+      <p style="color: var(--text-sub); font-size: 1.1rem; line-height: 1.6; max-width: 650px; margin: 0 auto 20px;">
+        Người ngoài hành tinh đã bắt trộm đàn bò và ẩn nấp trong các hành tinh bí ẩn. Các phi hành gia nhí hãy giải câu đố tiếng Anh để tìm ra vị trí của Alien và giải cứu các chú bò về tàu an toàn!
+      </p>
+
+      <div style="background: rgba(78, 204, 163, 0.1); border: 1px dashed var(--primary); padding: 10px 16px; border-radius: 12px; display: inline-block; color: var(--primary); font-weight: 600; font-size: 0.9rem;">
+        🎮 Trò chơi giáo dục lớp học trực tuyến • Dành cho Giáo viên & Học sinh tiểu học
+      </div>
+    </div>
+
+    <!-- 2 Cổng Truy Cập Dành Riêng Cho Lớp Học: Giáo Viên & Học Sinh -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
+      <!-- Card Giáo Viên -->
+      <div class="card" style="display: flex; flex-direction: column; justify-content: space-between; border-top: 4px solid #3a86ff; padding: 30px 24px;">
+        <div>
+          <div style="font-size: 3rem; margin-bottom: 12px;">👨‍🏫</div>
+          <h3 style="font-size: 1.4rem; color: #fff; margin-bottom: 10px;">Dành Cho Giáo Viên</h3>
+          <p style="color: var(--text-sub); font-size: 0.95rem; line-height: 1.55; margin-bottom: 24px;">
+            Tạo phòng học với mã phòng ngẫu nhiên, xem danh sách học sinh tham gia trực tiếp, điều khiển vòng chơi, giám sát điểm số và tải bảng tổng kết kết quả.
+          </p>
+        </div>
+        <a href="teacher.html" class="btn btn-primary" style="background: #3a86ff; box-shadow: 0 4px 15px rgba(58, 134, 255, 0.4); font-size: 1.05rem;">
+          Vào Màn Hình Giáo Viên →
+        </a>
+      </div>
+
+      <!-- Card Học Sinh -->
+      <div class="card" style="display: flex; flex-direction: column; justify-content: space-between; border-top: 4px solid var(--primary); padding: 30px 24px;">
+        <div>
+          <div style="font-size: 3rem; margin-bottom: 12px;">🚀</div>
+          <h3 style="font-size: 1.4rem; color: #fff; margin-bottom: 10px;">Dành Cho Học Sinh</h3>
+          <p style="color: var(--text-sub); font-size: 0.95rem; line-height: 1.55; margin-bottom: 24px;">
+            Nhập mã phòng từ Thầy/Cô, chọn avatar phi hành gia, tham gia trả lời các câu đố tiếng Anh qua radar không gian và thi đua giải cứu đàn bò cùng các bạn!
+          </p>
+        </div>
+        <a href="student.html" class="btn btn-primary" style="font-size: 1.05rem;">
+          Vào Màn Hình Học Sinh →
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/audio-manager.js"></script>
+  <script>
+    const muteBtn = document.getElementById('mute-btn');
+    if (muteBtn) {
+      const updateIcon = () => { muteBtn.textContent = AudioManager.isMuted() ? '🔇' : '🔊'; };
+      updateIcon();
+      muteBtn.addEventListener('click', () => {
+        AudioManager.toggleMute();
+        updateIcon();
+      });
+    }
+  </script>
+</body>
+</html>

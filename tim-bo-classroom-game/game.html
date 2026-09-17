@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; media-src 'self';">
+  <title>Màn Chơi Tìm Bò - Game Iframe</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    body {
+      background: transparent;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 10px;
+    }
+    .game-box {
+      width: 100%;
+      max-width: 900px;
+      background: rgba(14, 20, 56, 0.95);
+      border: 2px solid var(--border-card);
+      border-radius: var(--radius);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+      overflow: hidden;
+      position: relative;
+      min-height: 520px;
+      display: flex;
+      flex-direction: column;
+    }
+  </style>
+</head>
+<body>
+  <div class="game-box">
+    <!-- Header Game Mini -->
+    <div class="game-header">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <span class="cow-badge">
+          <img src="assets/images/image18.svg" style="width: 22px; height: 22px;" alt="Bò" />
+          <span id="cow-count">0</span> Đã cứu
+        </span>
+        <span style="color: var(--primary); font-weight: 700; font-size: 0.95rem;">
+          ⭐ <span id="player-score">0</span> Điểm
+        </span>
+      </div>
+
+      <div id="q-progress" style="color: var(--text-sub); font-weight: 600; font-size: 0.95rem;">
+        Sẵn sàng cất cánh...
+      </div>
+
+      <div>
+        <button id="mute-btn" class="icon-btn" style="width: 36px; height: 36px; font-size: 1rem;" title="Bật/Tắt âm thanh">
+          🔊
+        </button>
+      </div>
+    </div>
+
+    <!-- Màn hình chờ bắt đầu -->
+    <div id="waiting-screen" style="padding: 60px 20px; text-align: center; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+      <img src="assets/images/image6.svg" style="width: 130px; height: 130px; margin-bottom: 20px; animation: float 3s infinite ease-in-out;" alt="UFO" />
+      <h2 style="font-size: 1.6rem; color: #fff; margin-bottom: 10px;">Tàu Vũ Trụ Đang Nạp Năng Lượng</h2>
+      <p style="color: var(--text-sub); max-width: 440px;">
+        Người ngoài hành tinh đang giấu đàn bò trên các hành tinh xa xôi. Hãy sẵn sàng khi Giáo viên bắt đầu vòng cứu hộ!
+      </p>
+    </div>
+
+    <!-- Khu vực chơi câu hỏi: Đấu trường cứu bò -->
+    <div id="game-area" class="game-arena" style="display: none; flex: 1; flex-direction: column;">
+      <!-- Khung câu hỏi -->
+      <div class="question-box">
+        <div id="q-prompt" class="question-prompt">Đang tải câu hỏi...</div>
+      </div>
+
+      <!-- Vũ đài không gian 3 cột: Alien (Trái) | Các Hành Tinh (Giữa) | Phi Hành Gia (Phải) -->
+      <div class="battle-stage">
+        <!-- Cột Trái: Alien bay lơ lửng -->
+        <div id="alien-container" class="space-actor actor-left">
+          <div class="actor-card alien-card">
+            <div class="actor-tag alien-tag">👾 ALIEN</div>
+            <div id="alien-speech" class="speech-bubble alien-bubble">Bò là của ta! 🛸</div>
+            <div class="character-holder">
+              <!-- Lồng năng lượng bắt Alien -->
+              <div id="alien-cage" class="laser-cage">
+                <div class="cage-beam-ring"></div>
+                <div class="cage-bars">
+                  <span></span><span></span><span></span><span></span>
+                </div>
+                <div class="cage-badge">⚡ ĐÃ BẮT! ⚡</div>
+              </div>
+              <img id="alien-img" src="assets/images/image26.svg" alt="Alien trộm bò" class="actor-img alien-img floating-alien" />
+            </div>
+            <div class="thruster-shadow"></div>
+          </div>
+        </div>
+
+        <!-- Cột Giữa: Lưới các hành tinh tương ứng đáp án -->
+        <div class="battle-center">
+          <div id="planets-grid" class="planets-container"></div>
+        </div>
+
+        <!-- Cột Phải: Phi hành gia bay lơ lửng -->
+        <div id="astronaut-container" class="space-actor actor-right">
+          <div class="actor-card astronaut-card">
+            <div class="actor-tag astronaut-tag">👨‍🚀 PHI HÀNH GIA</div>
+            <div id="astronaut-speech" class="speech-bubble astronaut-bubble">Cứu các chú bò nào! 🚀</div>
+            <div class="character-holder">
+              <img id="astronaut-img" src="assets/images/astronaut.svg" alt="Phi hành gia cứu hộ" class="actor-img astronaut-img floating-astronaut" />
+            </div>
+            <div class="thruster-shadow"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Thông báo kết quả thao tác -->
+      <div id="action-feedback" class="action-feedback-box" style="min-height: 40px; text-align: center; padding: 6px 12px;"></div>
+    </div>
+
+    <!-- Màn hình hoàn thành câu hỏi -->
+    <div id="finish-screen" style="display: none; padding: 50px 20px; text-align: center; flex: 1;">
+      <img src="assets/images/image18.svg" style="width: 100px; height: 100px; margin-bottom: 16px; animation: float 3s infinite ease-in-out;" alt="Bò vui vẻ" />
+      <h2 style="font-size: 1.6rem; color: var(--gold); margin-bottom: 12px;">Hoàn Thành Lượt Cứu Hộ!</h2>
+      <p id="final-cows-score" style="color: #fff; font-size: 1.15rem; margin-bottom: 20px; font-weight: 600;">
+        Bạn đã giải cứu thành công các chú bò!
+      </p>
+      <p style="color: var(--text-sub);">
+        Đang chờ các bạn khác trong lớp hoàn thành nhiệm vụ...
+      </p>
+    </div>
+
+    <!-- Hiệu ứng cứu bò nổi lên -->
+    <div id="rescue-overlay" class="rescue-overlay"></div>
+  </div>
+
+  <script src="assets/sdk.js"></script>
+  <script src="js/audio-manager.js"></script>
+  <script src="js/game.js"></script>
+  <script>
+    const muteBtn = document.getElementById('mute-btn');
+    if (muteBtn) {
+      const updateIcon = () => {
+        muteBtn.textContent = AudioManager.isMuted() ? '🔇' : '🔊';
+      };
+      updateIcon();
+      muteBtn.addEventListener('click', () => {
+        AudioManager.toggleMute();
+        updateIcon();
+      });
+    }
+  </script>
+</body>
+</html>

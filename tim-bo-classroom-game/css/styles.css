@@ -1,0 +1,1024 @@
+/* =========================================================
+   "Tìm Bò - Let's Save the Cows!" Classroom Game Styles
+   Cute 2D Cartoon Cosmic Theme for Primary School (6-11 yrs)
+   ========================================================= */
+
+:root {
+  --bg-space: #0b0f2a;
+  --bg-card: rgba(22, 33, 62, 0.9);
+  --border-card: #2e3856;
+  --primary: #4ecca3;
+  --primary-hover: #3db890;
+  --accent: #f72585;
+  --warning: #ffb703;
+  --gold: #ffd166;
+  --text-main: #f8f9fa;
+  --text-sub: #b8c1ec;
+  --text-dark: #1a1a2e;
+  --planet-1: #ff5964;
+  --planet-2: #35a7ff;
+  --planet-3: #ffc43d;
+  --planet-4: #38b000;
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --radius: 16px;
+  --shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family);
+  background: var(--bg-space);
+  color: var(--text-main);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  position: relative;
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(123, 44, 191, 0.2) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(78, 204, 163, 0.15) 0%, transparent 40%),
+    radial-gradient(2px 2px at 20px 30px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 140px 70px, #ffd166, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 90px 140px, #ffffff, rgba(0,0,0,0));
+  background-repeat: repeat;
+  background-size: auto, auto, 250px 250px, 350px 350px, 200px 200px;
+}
+
+/* Header & Top Bar */
+.top-bar {
+  background: rgba(11, 15, 42, 0.85);
+  backdrop-filter: blur(10px);
+  border-bottom: 2px solid var(--border-card);
+  padding: 12px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #232946;
+  border: 2px solid var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.brand-icon img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+.brand h1 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 0.5px;
+}
+
+.brand-badge {
+  font-size: 0.75rem;
+  background: var(--accent);
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 12px;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.top-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.icon-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  transition: all 0.2s ease;
+}
+
+.icon-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+}
+
+.icon-btn:focus-visible {
+  outline: 3px solid var(--primary);
+}
+
+/* Main Container */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Cards & Layout */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow);
+}
+
+.hero-section {
+  text-align: center;
+  padding: 40px 20px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.hero-img {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 20px;
+  filter: drop-shadow(0 10px 20px rgba(78, 204, 163, 0.3));
+  animation: float 4s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-12px) rotate(3deg); }
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: var(--text-dark);
+  box-shadow: 0 4px 15px rgba(78, 204, 163, 0.4);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-accent {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(247, 37, 133, 0.4);
+}
+
+.btn-accent:hover:not(:disabled) {
+  filter: brightness(1.1);
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background: #2b2c4b;
+  color: #fff;
+  border: 1px solid #43446b;
+}
+
+.btn-secondary:hover {
+  background: #393a63;
+}
+
+/* Form Inputs */
+.form-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: var(--text-sub);
+  font-size: 0.95rem;
+}
+
+.form-input {
+  width: 100%;
+  height: 52px;
+  padding: 0 16px;
+  border-radius: 12px;
+  border: 2px solid var(--border-card);
+  background: #111633;
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 600;
+  transition: border-color 0.2s ease;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 12px rgba(78, 204, 163, 0.3);
+}
+
+.code-input {
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  text-align: center;
+  font-size: 1.6rem;
+  font-weight: 800;
+}
+
+/* Teacher Dashboard */
+.teacher-grid {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 24px;
+}
+
+@media (max-width: 900px) {
+  .teacher-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.room-badge-large {
+  background: linear-gradient(135deg, #1b204a, #23295c);
+  border: 2px dashed var(--primary);
+  border-radius: var(--radius);
+  padding: 20px;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.room-code-display {
+  font-size: 3rem;
+  font-weight: 900;
+  letter-spacing: 8px;
+  color: var(--primary);
+  text-shadow: 0 0 20px rgba(78, 204, 163, 0.5);
+  user-select: all;
+  margin: 8px 0;
+}
+
+/* Roster Cards (1 - 4 Students) */
+.roster-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.student-card {
+  background: #191e42;
+  border: 1px solid var(--border-card);
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.2s ease;
+}
+
+.student-card.active {
+  border-color: var(--primary);
+  box-shadow: 0 0 15px rgba(78, 204, 163, 0.2);
+}
+
+.student-card.finished {
+  border-color: var(--gold);
+}
+
+.avatar-badge {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #2b3263;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  border: 2px solid var(--border-card);
+}
+
+.student-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.student-name {
+  font-weight: 700;
+  font-size: 1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.student-stats {
+  font-size: 0.85rem;
+  color: var(--text-sub);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.cow-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 209, 102, 0.15);
+  color: var(--gold);
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
+/* Game Scene within game.html / student.html */
+.game-viewport {
+  position: relative;
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  background: #090c24;
+  border: 2px solid var(--border-card);
+  border-radius: var(--radius);
+  overflow: hidden;
+  min-height: 540px;
+  display: flex;
+  flex-direction: column;
+}
+
+.game-header {
+  background: rgba(14, 19, 51, 0.85);
+  padding: 12px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-card);
+}
+
+.question-box {
+  padding: 24px;
+  text-align: center;
+  background: rgba(25, 30, 68, 0.6);
+  margin: 16px 20px 0;
+  border-radius: var(--radius);
+  border: 1px solid rgba(78, 204, 163, 0.3);
+}
+
+.question-prompt {
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.4;
+  color: #ffffff;
+}
+
+/* Battle Stage Arena (Alien on Left, Planets in Center, Astronaut on Right) */
+.battle-stage {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 10px 14px;
+  flex: 1;
+  position: relative;
+  min-height: 380px;
+}
+
+.battle-center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+
+/* Space Actor Cards (Left: Alien, Right: Astronaut) */
+.space-actor {
+  width: 145px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 10;
+}
+
+.actor-card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+}
+
+.actor-tag {
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.alien-tag {
+  background: rgba(247, 37, 133, 0.25);
+  color: #ff70a6;
+  border: 1px solid #f72585;
+}
+
+.astronaut-tag {
+  background: rgba(78, 204, 163, 0.25);
+  color: #4ecca3;
+  border: 1px solid #4ecca3;
+}
+
+/* Speech Bubbles */
+.speech-bubble {
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 6px 8px;
+  border-radius: 12px;
+  max-width: 140px;
+  margin-bottom: 8px;
+  line-height: 1.3;
+  position: relative;
+  transition: all 0.3s ease;
+  min-height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.alien-bubble {
+  background: #2b1736;
+  color: #ff9e00;
+  border: 1px solid #f72585;
+  box-shadow: 0 4px 12px rgba(247, 37, 133, 0.35);
+}
+
+.alien-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px 6px 0;
+  border-style: solid;
+  border-color: #2b1736 transparent;
+  display: block;
+  width: 0;
+}
+
+.astronaut-bubble {
+  background: #112840;
+  color: #4ecca3;
+  border: 1px solid #00f2fe;
+  box-shadow: 0 4px 12px rgba(0, 242, 254, 0.3);
+}
+
+.astronaut-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px 6px 0;
+  border-style: solid;
+  border-color: #112840 transparent;
+  display: block;
+  width: 0;
+}
+
+/* Character Graphic Holders */
+.character-holder {
+  width: 125px;
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.actor-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: filter 0.3s ease, transform 0.3s ease;
+}
+
+.alien-img {
+  filter: drop-shadow(0 6px 14px rgba(247, 37, 133, 0.45));
+}
+
+.astronaut-img {
+  filter: drop-shadow(0 6px 14px rgba(0, 242, 254, 0.45));
+}
+
+.thruster-shadow {
+  width: 65px;
+  height: 10px;
+  background: radial-gradient(ellipse at center, rgba(0, 242, 254, 0.35) 0%, rgba(0,0,0,0) 70%);
+  border-radius: 50%;
+  margin-top: 6px;
+  animation: shadowPulse 2.8s ease-in-out infinite alternate;
+}
+
+@keyframes shadowPulse {
+  0% { transform: scaleX(0.8); opacity: 0.3; }
+  100% { transform: scaleX(1.2); opacity: 0.7; }
+}
+
+/* Floating Animations */
+.floating-alien {
+  animation: alienFloat 3.2s ease-in-out infinite;
+}
+
+@keyframes alienFloat {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-14px) rotate(-4deg);
+  }
+}
+
+.floating-astronaut {
+  animation: astronautFloat 3.5s ease-in-out infinite alternate;
+}
+
+@keyframes astronautFloat {
+  0% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  100% {
+    transform: translateY(-16px) rotate(3deg);
+  }
+}
+
+/* Alien Captured State (Laser Cage + Trap Animation) */
+.laser-cage {
+  position: absolute;
+  inset: -6px;
+  border-radius: 16px;
+  border: 3px solid #00f2fe;
+  background: radial-gradient(circle, rgba(0, 242, 254, 0.2) 0%, rgba(255, 209, 102, 0.15) 100%);
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  box-shadow: 0 0 22px #00f2fe, inset 0 0 16px #ffd166;
+  pointer-events: none;
+}
+
+.laser-cage.active {
+  display: flex;
+  animation: cageSnap 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards, electricHum 0.6s infinite alternate;
+}
+
+.cage-bars {
+  position: absolute;
+  inset: 4px;
+  display: flex;
+  justify-content: space-around;
+  pointer-events: none;
+}
+
+.cage-bars span {
+  width: 3px;
+  height: 100%;
+  background: linear-gradient(180deg, #ffd166 0%, #00f2fe 50%, #ffd166 100%);
+  box-shadow: 0 0 8px #00f2fe;
+  animation: barFlicker 0.2s infinite alternate;
+}
+
+.cage-bars span:nth-child(2) { animation-delay: 0.05s; }
+.cage-bars span:nth-child(3) { animation-delay: 0.1s; }
+.cage-bars span:nth-child(4) { animation-delay: 0.15s; }
+
+@keyframes barFlicker {
+  0% { opacity: 0.6; }
+  100% { opacity: 1; }
+}
+
+.cage-badge {
+  position: absolute;
+  top: -12px;
+  background: #ffd166;
+  color: #0b0c10;
+  font-weight: 900;
+  font-size: 0.72rem;
+  padding: 2px 8px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #ffd166;
+  white-space: nowrap;
+}
+
+@keyframes cageSnap {
+  0% { transform: scale(1.6); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes electricHum {
+  0% { filter: drop-shadow(0 0 8px #00f2fe); }
+  100% { filter: drop-shadow(0 0 18px #ffd166); }
+}
+
+.alien-img.captured {
+  animation: alienTrapped 0.4s ease-in-out infinite alternate !important;
+}
+
+@keyframes alienTrapped {
+  0% { transform: scale(0.85) rotate(-3deg); filter: hue-rotate(90deg) brightness(1.2); }
+  100% { transform: scale(0.82) rotate(3deg); filter: hue-rotate(-30deg) brightness(1.1); }
+}
+
+/* Alien Escape (When Incorrect Answer) */
+.alien-img.escaped {
+  animation: alienFlyAway 1.2s cubic-bezier(0.5, 0, 0.7, 1) forwards !important;
+}
+
+@keyframes alienFlyAway {
+  0% {
+    transform: scale(1) translate(0, 0) rotate(0deg);
+    opacity: 1;
+  }
+  25% {
+    transform: scale(1.15) translate(15px, 10px) rotate(-12deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.2) translate(-360px, -400px) rotate(-50deg);
+    opacity: 0;
+  }
+}
+
+/* Alien Enter / Return (When Next Question Starts) */
+.alien-img.entering {
+  animation: alienSwoopIn 0.8s cubic-bezier(0.2, 0.8, 0.3, 1) forwards !important;
+}
+
+@keyframes alienSwoopIn {
+  0% {
+    transform: translate(-300px, -220px) scale(0.3) rotate(-30deg);
+    opacity: 0;
+  }
+  75% {
+    transform: translate(10px, 8px) scale(1.05) rotate(4deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+/* Astronaut Reactions */
+.astronaut-img.cheering {
+  animation: astroVictory 0.8s ease-in-out infinite alternate !important;
+}
+
+@keyframes astroVictory {
+  0% { transform: translateY(0) scale(1) rotate(0deg); }
+  50% { transform: translateY(-24px) scale(1.15) rotate(6deg); filter: drop-shadow(0 0 16px #4ecca3); }
+  100% { transform: translateY(-8px) scale(1.05) rotate(-4deg); }
+}
+
+.astronaut-img.sad {
+  animation: astroOops 0.6s ease-in-out infinite alternate !important;
+}
+
+@keyframes astroOops {
+  0% { transform: translateY(0) rotate(-6deg); }
+  100% { transform: translateY(8px) rotate(6deg); filter: grayscale(0.4); }
+}
+
+/* Planets / Options Grid */
+.planets-container {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  padding: 8px 4px;
+  align-items: center;
+  justify-content: center;
+}
+
+.planet-card {
+  background: rgba(20, 26, 61, 0.8);
+  border: 2px solid var(--border-card);
+  border-radius: var(--radius);
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  min-height: 170px;
+  user-select: none;
+}
+
+.planet-card:hover:not(.disabled) {
+  transform: translateY(-6px) scale(1.02);
+  border-color: var(--primary);
+  box-shadow: 0 10px 25px rgba(78, 204, 163, 0.3);
+}
+
+.planet-card:focus-visible {
+  outline: 3px solid var(--primary);
+}
+
+.planet-card.disabled {
+  cursor: default;
+  opacity: 0.8;
+}
+
+.planet-icon-wrapper {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 12px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.planet-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.option-badge {
+  position: absolute;
+  top: -6px;
+  left: -6px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.4);
+}
+
+.option-text {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #fff;
+  line-height: 1.35;
+}
+
+/* Feedback Animations on Planet */
+.planet-card.correct {
+  border-color: #38b000 !important;
+  background: rgba(56, 176, 0, 0.2) !important;
+  animation: correctBounce 0.6s ease;
+}
+
+.planet-card.wrong {
+  border-color: #ff5964 !important;
+  background: rgba(255, 89, 100, 0.2) !important;
+  animation: wrongShake 0.5s ease;
+}
+
+@keyframes correctBounce {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+@keyframes wrongShake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-8px); }
+  40%, 80% { transform: translateX(8px); }
+}
+
+/* Rescue Animation Overlay */
+.rescue-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.rescue-overlay.active {
+  opacity: 1;
+}
+
+.rescue-beam {
+  position: absolute;
+  top: 0;
+  width: 260px;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(78, 204, 163, 0.6) 0%, rgba(78, 204, 163, 0.05) 100%);
+  clip-path: polygon(25% 0%, 75% 0%, 100% 100%, 0% 100%);
+  animation: beamGlow 0.8s infinite alternate;
+}
+
+@keyframes beamGlow {
+  from { opacity: 0.6; }
+  to { opacity: 0.95; }
+}
+
+.floating-cow {
+  width: 140px;
+  height: 140px;
+  animation: rescueAscend 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes rescueAscend {
+  0% { transform: translateY(120px) scale(0.6); opacity: 0; }
+  30% { opacity: 1; }
+  100% { transform: translateY(-160px) scale(1.1); opacity: 0; }
+}
+
+.explosion-overlay {
+  position: absolute;
+  width: 130px;
+  height: 130px;
+  pointer-events: none;
+  animation: boomPop 0.6s ease forwards;
+}
+
+@keyframes boomPop {
+  0% { transform: scale(0.3); opacity: 1; }
+  50% { transform: scale(1.3); opacity: 1; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+
+/* Leaderboard & Summary */
+.podium-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 16px;
+  margin: 30px 0 20px;
+  min-height: 220px;
+}
+
+.podium-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 110px;
+}
+
+.podium-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #23295c;
+  border: 3px solid var(--border-card);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+}
+
+.podium-step.rank-1 .podium-avatar { border-color: var(--gold); }
+.podium-step.rank-2 .podium-avatar { border-color: #e0e1dd; }
+.podium-step.rank-3 .podium-avatar { border-color: #cd7f32; }
+
+.podium-block {
+  width: 100%;
+  border-radius: 12px 12px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 1.5rem;
+  color: #fff;
+  padding: 12px 0;
+}
+
+.podium-step.rank-1 .podium-block { height: 130px; background: linear-gradient(180deg, #ffd166, #e09f3e); }
+.podium-step.rank-2 .podium-block { height: 95px; background: linear-gradient(180deg, #adb5bd, #6c757d); }
+.podium-step.rank-3 .podium-block { height: 70px; background: linear-gradient(180deg, #cd7f32, #99582a); }
+.podium-step.rank-4 .podium-block { height: 50px; background: #343a40; }
+
+/* Table styling for teacher review */
+.stats-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+  text-align: left;
+}
+
+.stats-table th, .stats-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border-card);
+}
+
+.stats-table th {
+  background: rgba(255, 255, 255, 0.05);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  color: var(--text-sub);
+}
+
+.stats-table tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* Responsive Rules for Small Screens in Battle Arena */
+@media (max-width: 720px) {
+  .battle-stage {
+    flex-direction: column;
+    padding: 8px;
+    gap: 8px;
+  }
+  .space-actor {
+    width: 100%;
+    flex-direction: row;
+    justify-content: center;
+  }
+  .actor-card {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+  }
+  .character-holder {
+    width: 65px;
+    height: 75px;
+  }
+  .speech-bubble {
+    font-size: 0.72rem;
+    max-width: 130px;
+    min-height: 28px;
+  }
+  .planets-container {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "bankId": "tim-bo-unit7",
+  "title": "Tìm Bò - Giải Cứu Đàn Bò Khỏi Người Ngoài Hành Tinh",
+  "description": "Bộ câu hỏi tiếng Anh ngữ pháp tiểu học - Sở hữu cách và giới từ chỉ vị trí",
+  "questions": [
+    {
+      "id": "q-001",
+      "type": "single-choice",
+      "prompt": "Whose school bag is next to the sofa?",
+      "options": [
+        {"id": "a", "text": "It's the boy's school bag."},
+        {"id": "b", "text": "It's the boys school bag."},
+        {"id": "c", "text": "It's the boy school bag."}
+      ],
+      "correctOptionId": "a",
+      "points": 10
+    },
+    {
+      "id": "q-002",
+      "type": "single-choice",
+      "prompt": "Whose books are on the shelf?",
+      "options": [
+        {"id": "a", "text": "They're the girl books."},
+        {"id": "b", "text": "They're the girls' books."},
+        {"id": "c", "text": "They're the girls books."}
+      ],
+      "correctOptionId": "b",
+      "points": 10
+    },
+    {
+      "id": "q-003",
+      "type": "single-choice",
+      "prompt": "Whose phone is on the small table?",
+      "options": [
+        {"id": "a", "text": "It's Ben phone."},
+        {"id": "b", "text": "It's Ben's phone."},
+        {"id": "c", "text": "It's Bens' phone."}
+      ],
+      "correctOptionId": "b",
+      "points": 10
+    },
+    {
+      "id": "q-004",
+      "type": "single-choice",
+      "prompt": "Where is the family picture?",
+      "options": [
+        {"id": "a", "text": "It's under the chest of drawers."},
+        {"id": "b", "text": "It's between the chest of drawers and the sofa."},
+        {"id": "c", "text": "It's above the chest of drawers."}
+      ],
+      "correctOptionId": "c",
+      "points": 10
+    },
+    {
+      "id": "q-005",
+      "type": "single-choice",
+      "prompt": "Whose toys are in the box?",
+      "options": [
+        {"id": "a", "text": "They're the children's toys."},
+        {"id": "b", "text": "They're the children toy."},
+        {"id": "c", "text": "They're the childrens' toys."}
+      ],
+      "correctOptionId": "a",
+      "points": 10
+    },
+    {
+      "id": "q-006",
+      "type": "single-choice",
+      "prompt": "Where are Ben's headphones?",
+      "options": [
+        {"id": "a", "text": "They're next to the lamp."},
+        {"id": "b", "text": "They're behind the lamp."},
+        {"id": "c", "text": "They're under the lamp."}
+      ],
+      "correctOptionId": "b",
+      "points": 10
+    }
+  ]
+}

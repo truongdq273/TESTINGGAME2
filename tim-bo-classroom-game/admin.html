@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https:;">
+  <title>Quản Lý Nguồn Câu Hỏi - Content Admin</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header class="top-bar">
+    <div class="brand">
+      <div class="brand-icon">
+        <img src="assets/images/image18.svg" alt="Bò logo" />
+      </div>
+      <div>
+        <h1>Tìm Bò Không Gian</h1>
+        <span class="brand-badge" style="background: #e63946;">Quản Trị Nội Dung</span>
+      </div>
+    </div>
+    <div class="top-actions">
+      <a href="index.html" class="btn btn-secondary" style="min-height: 40px; padding: 8px 16px; font-size: 0.9rem;">
+        Trang Chủ
+      </a>
+    </div>
+  </header>
+
+  <main class="container" style="max-width: 900px;">
+    <div class="card" style="margin-bottom: 24px;">
+      <h2 style="font-size: 1.5rem; color: #fff; margin-bottom: 8px;">Cấu Hình Nguồn Câu Hỏi (Content Source)</h2>
+      <p style="color: var(--text-sub); margin-bottom: 20px;">
+        Chủ nội dung có thể cập nhật câu hỏi và đáp án tại đây. Mọi thay đổi sẽ tự động có hiệu lực ở vòng chơi mới mà không cần sửa code game hay deploy lại.
+      </p>
+
+      <div class="form-group">
+        <label class="form-label">CHỌN PHƯƠNG THỨC NGUỒN</label>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+          <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; background: rgba(255,255,255,0.05); padding: 10px 16px; border-radius: 10px;">
+            <input type="radio" name="source-type" value="local" checked>
+            <span>Mặc định (content.json nội bộ)</span>
+          </label>
+          <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; background: rgba(255,255,255,0.05); padding: 10px 16px; border-radius: 10px;">
+            <input type="radio" name="source-type" value="json">
+            <span>Chỉnh sửa JSON Trực tiếp</span>
+          </label>
+          <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; background: rgba(255,255,255,0.05); padding: 10px 16px; border-radius: 10px;">
+            <input type="radio" name="source-type" value="url">
+            <span>URL Dữ liệu Ngoài (HTTPS JSON)</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Khung URL ngoài -->
+      <div id="url-box" class="form-group" style="display: none;">
+        <label class="form-label" for="source-url">URL DỮ LIỆU ĐÃ XUẤT BẢN</label>
+        <input type="url" id="source-url" class="form-input" placeholder="https://api.example.com/questions.json">
+        <p style="font-size: 0.8rem; color: var(--text-sub); margin-top: 6px;">
+          Lưu ý: Endpoint cần hỗ trợ CORS để trình duyệt đọc được dữ liệu.
+        </p>
+      </div>
+
+      <!-- Khung soạn thảo JSON -->
+      <div id="json-box" class="form-group" style="display: none;">
+        <label class="form-label" for="source-json">NỘI DUNG NGÂN HÀNG CÂU HỎI (JSON Chuẩn Schema v1)</label>
+        <textarea id="source-json" class="form-input" style="height: 320px; font-family: monospace; font-size: 0.9rem; padding: 14px; line-height: 1.4; resize: vertical;" spellcheck="false"></textarea>
+      </div>
+
+      <div id="msg-box" style="padding: 12px; border-radius: 10px; margin-bottom: 16px; display: none;"></div>
+
+      <div style="display: flex; gap: 12px; justify-content: flex-end;">
+        <button id="btn-validate" class="btn btn-secondary">Kiểm tra hợp lệ</button>
+        <button id="btn-save" class="btn btn-primary">Lưu cấu hình nguồn</button>
+      </div>
+    </div>
+
+    <!-- Thông tin cấu hình hiện hành -->
+    <div class="card">
+      <h3 style="font-size: 1.15rem; color: var(--gold); margin-bottom: 12px;">Bản Dữ Liệu Đang Kích Hoạt</h3>
+      <div id="active-info" style="font-size: 0.95rem; color: var(--text-sub); line-height: 1.6;">
+        Đang tải thông tin...
+      </div>
+    </div>
+  </main>
+
+  <script src="js/content-loader.js"></script>
+  <script>
+    (function () {
+      'use strict';
+
+      const radios = document.querySelectorAll('input[name="source-type"]');
+      const urlBox = document.getElementById('url-box');
+      const jsonBox = document.getElementById('json-box');
+      const sourceUrl = document.getElementById('source-url');
+      const sourceJson = document.getElementById('source-json');
+      const msgBox = document.getElementById('msg-box');
+      const btnValidate = document.getElementById('btn-validate');
+      const btnSave = document.getElementById('btn-save');
+      const activeInfo = document.getElementById('active-info');
+
+      const currentConfig = ContentLoader.getSavedSourceConfig();
+
+      // Load default content.json template into textarea
+      fetch('content.json')
+        .then(r => r.text())
+        .then(txt => {
+          if (!sourceJson.value) {
+            sourceJson.value = txt;
+          }
+        });
+
+      // Apply saved config to UI
+      radios.forEach(r => {
+        if (r.value === currentConfig.type) {
+          r.checked = true;
+        }
+        r.addEventListener('change', updateFormState);
+      });
+      if (currentConfig.url) sourceUrl.value = currentConfig.url;
+      if (currentConfig.rawJson) sourceJson.value = currentConfig.rawJson;
+
+      function updateFormState() {
+        const type = document.querySelector('input[name="source-type"]:checked').value;
+        urlBox.style.display = (type === 'url') ? 'block' : 'none';
+        jsonBox.style.display = (type === 'json') ? 'block' : 'none';
+      }
+      updateFormState();
+
+      function escapeHtml(str) {
+        const div = document.createElement('div');
+        div.textContent = str == null ? '' : String(str);
+        return div.innerHTML;
+      }
+
+      async function showActiveInfo() {
+        try {
+          const bank = await ContentLoader.loadQuestionBank(ContentLoader.getSavedSourceConfig());
+          activeInfo.innerHTML = `
+            <div><strong>Tên bộ:</strong> ${escapeHtml(bank.title)}</div>
+            <div><strong>Mã phiên bản (hash):</strong> <code style="color: var(--primary);">${escapeHtml(bank.contentVersion)}</code></div>
+            <div><strong>Số câu hỏi hợp lệ:</strong> ${escapeHtml(bank.questions.length)} câu</div>
+            <div><strong>Thời điểm tải:</strong> ${escapeHtml(new Date(bank.fetchedAt).toLocaleString('vi-VN'))}</div>
+          `;
+        } catch (err) {
+          activeInfo.innerHTML = `<span style="color: #ff5964;">Lỗi đọc dữ liệu: ${escapeHtml(err.message)}</span>`;
+        }
+      }
+
+      function showMessage(text, isError = false) {
+        msgBox.style.display = 'block';
+        msgBox.style.background = isError ? 'rgba(255, 89, 100, 0.15)' : 'rgba(78, 204, 163, 0.15)';
+        msgBox.style.color = isError ? '#ff5964' : 'var(--primary)';
+        msgBox.style.border = `1px solid ${isError ? '#ff5964' : 'var(--primary)'}`;
+        msgBox.textContent = text;
+      }
+
+      btnValidate.addEventListener('click', async () => {
+        const type = document.querySelector('input[name="source-type"]:checked').value;
+        const testConfig = { type };
+        if (type === 'url') testConfig.url = sourceUrl.value.trim();
+        if (type === 'json') testConfig.rawJson = sourceJson.value.trim();
+
+        try {
+          const bank = await ContentLoader.loadQuestionBank(testConfig);
+          showMessage(`Dữ liệu hợp lệ! Gồm ${bank.questions.length} câu hỏi. Mã hash phiên bản: ${bank.contentVersion}`);
+        } catch (err) {
+          showMessage(`Kiểm tra thất bại: ${err.message}`, true);
+        }
+      });
+
+      btnSave.addEventListener('click', async () => {
+        const type = document.querySelector('input[name="source-type"]:checked').value;
+        const newConfig = { type };
+        if (type === 'url') newConfig.url = sourceUrl.value.trim();
+        if (type === 'json') newConfig.rawJson = sourceJson.value.trim();
+
+        try {
+          // Kiểm tra trước khi lưu
+          const bank = await ContentLoader.loadQuestionBank(newConfig);
+          ContentLoader.saveSourceConfig(newConfig);
+          showMessage(`Đã lưu cấu hình thành công! Ngân hàng câu hỏi "${bank.title}" (${bank.questions.length} câu) đã sẵn sàng.`);
+          showActiveInfo();
+        } catch (err) {
+          showMessage(`Lỗi lưu: ${err.message}`, true);
+        }
+      });
+
+      showActiveInfo();
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' ws: wss: https:; media-src 'self';">
+  <title>Bảng Điều Khiển Giáo Viên - Tìm Bò (Teacher)</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .btn-ready {
+      background: #38b000 !important;
+      color: #fff !important;
+      box-shadow: 0 0 20px rgba(56, 176, 0, 0.6) !important;
+      animation: pulseBtn 1.5s infinite;
+      cursor: pointer !important;
+      opacity: 1 !important;
+    }
+    @keyframes pulseBtn {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header Giáo viên -->
+  <header class="top-bar">
+    <div class="brand">
+      <div class="brand-icon">
+        <img src="assets/images/image18.svg" alt="Bò logo" />
+      </div>
+      <div>
+        <h1>Tìm Bò Không Gian</h1>
+        <span class="brand-badge" style="background: #3a86ff;">Giáo Viên</span>
+      </div>
+    </div>
+
+    <div class="top-actions">
+      <button id="btn-open-students" class="btn btn-secondary" style="min-height: 38px; padding: 6px 14px; font-size: 0.85rem;" title="Tự động mở 4 tab học sinh để thử nghiệm ngay trên máy này">
+        👥 Mở 4 Tab Học Sinh
+      </button>
+      <button id="mute-btn" class="icon-btn" title="Bật/Tắt âm thanh">🔊</button>
+      <a href="index.html" class="btn btn-secondary" style="min-height: 38px; padding: 6px 14px; font-size: 0.85rem;">
+        Trang Chủ
+      </a>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Hàng trên: Mã phòng lớn & Điều khiển nhanh -->
+    <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-between; align-items: stretch; margin-bottom: 24px;">
+      <!-- Card Mã Phòng Lớn -->
+      <div class="card" style="flex: 1; min-width: 280px; text-align: center; border: 2px dashed var(--primary);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+          <span style="font-size: 0.85rem; font-weight: 700; color: var(--text-sub); text-transform: uppercase;">
+            MÃ PHÒNG HỌC
+          </span>
+          <button id="btn-new-room" style="background: none; border: none; color: var(--text-sub); font-size: 0.8rem; cursor: pointer; text-decoration: underline;">
+            Đổi mã mới
+          </button>
+        </div>
+        <div id="room-code-val" class="room-code-display">----</div>
+        <div style="font-size: 0.95rem; color: var(--text-sub);">
+          Số học sinh đã vào: <strong id="student-count-badge" style="color: var(--gold); font-size: 1.15rem;">0 / 4</strong>
+        </div>
+      </div>
+
+      <!-- Card Thông tin Ngân hàng câu hỏi -->
+      <div class="card" style="flex: 1.5; min-width: 320px; display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <span style="font-size: 0.85rem; font-weight: 700; color: var(--text-sub); text-transform: uppercase;">
+              NGÂN HÀNG CÂU HỎI (6 CÂU TỪ GOOGLE DOCS)
+            </span>
+            <button id="btn-reload-content" class="btn btn-secondary" style="min-height: 32px; padding: 4px 10px; font-size: 0.8rem;">
+              🔄 Tải lại
+            </button>
+          </div>
+          <h3 id="bank-title" style="font-size: 1.1rem; color: #fff; margin-bottom: 4px;">Đang tải...</h3>
+          <p id="bank-meta" style="font-size: 0.85rem; color: var(--text-sub);">Phiên bản: --- | Số câu: ---</p>
+        </div>
+
+        <div style="display: flex; gap: 12px; margin-top: 16px;">
+          <button id="btn-start-game" class="btn btn-primary" style="flex: 1; font-size: 1.1rem; letter-spacing: 0.5px;" disabled>
+            🚀 BẮT ĐẦU TRÒ CHƠI
+          </button>
+          <button id="btn-end-game" class="btn btn-accent" style="display: none; flex: 1;">
+            🛑 KẾT THÚC VÒNG CHƠI
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Danh Sách Học Sinh & Trạng Thái Trực Tiếp -->
+    <div class="teacher-grid">
+      <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <h3 style="font-size: 1.2rem; color: #fff;">
+            📋 DANH SÁCH LỚP HỌC (1 - 4 Học sinh)
+          </h3>
+          <div id="roster-status-hint" style="font-size: 0.85rem; color: var(--gold);">
+            Đang chờ học sinh vào phòng...
+          </div>
+        </div>
+
+        <div id="teacher-roster" class="roster-grid">
+          <div style="grid-column: 1 / -1; text-align: center; padding: 40px 20px; color: var(--text-sub);">
+            Chưa có học sinh nào vào phòng. Hãy chia sẻ mã phòng phía trên cho các em!
+          </div>
+        </div>
+
+        <!-- Bảng Tiến Độ Chi Tiết Khi Chơi -->
+        <div id="playing-stats-box" style="display: none; margin-top: 24px;">
+          <h4 style="font-size: 1.05rem; color: var(--gold); margin-bottom: 12px;">
+            📊 TIẾN ĐỘ VÀ ĐÁP ÁN CỦA HỌC SINH
+          </h4>
+          <div style="overflow-x: auto;">
+            <table class="stats-table">
+              <thead>
+                <tr>
+                  <th>Học Sinh</th>
+                  <th>Điểm Số</th>
+                  <th>Số Bò Cứu Được</th>
+                  <th>Tiến Độ</th>
+                  <th>Đúng / Sai</th>
+                  <th>Trạng Thái</th>
+                </tr>
+              </thead>
+              <tbody id="stats-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Xem Trước Bộ Câu Hỏi & Đáp Án Chuẩn (Chỉ Giáo Viên Thấy) -->
+      <div class="card" style="display: flex; flex-direction: column;">
+        <h3 style="font-size: 1.1rem; color: var(--primary); margin-bottom: 12px;">
+          🔍 ĐÁP ÁN CHUẨN CÂU HỎI
+        </h3>
+        <p style="font-size: 0.8rem; color: var(--text-sub); margin-bottom: 12px;">
+          Học sinh không nhìn thấy đáp án này trong màn chơi của mình.
+        </p>
+
+        <div id="questions-preview-list" style="overflow-y: auto; max-height: 480px; display: flex; flex-direction: column; gap: 12px; padding-right: 4px;"></div>
+      </div>
+    </div>
+
+    <!-- Màn hình Tổng kết & Xuất Báo Cáo CSV (Khi kết thúc) -->
+    <section id="summary-section" class="card" style="display: none; margin-top: 24px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+        <div>
+          <h2 style="font-size: 1.6rem; color: var(--gold);">🏆 TỔNG KẾT VÒNG CỨU HỘ ĐÀN BÒ</h2>
+          <p style="color: var(--text-sub);">Bảng thành tích và xuất báo cáo kết quả học tập</p>
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <button id="btn-export-csv" class="btn btn-primary">
+            📥 Xuất File Báo Cáo CSV
+          </button>
+          <button id="btn-new-round" class="btn btn-secondary">
+            🔄 Bắt Đầu Vòng Mới
+          </button>
+        </div>
+      </div>
+
+      <div id="teacher-podium" class="podium-container"></div>
+
+      <div style="overflow-x: auto; margin-top: 20px;">
+        <table class="stats-table">
+          <thead>
+            <tr>
+              <th>Hạng</th>
+              <th>Học Sinh</th>
+              <th>Điểm</th>
+              <th>Số Bò Cứu</th>
+              <th>Số Câu Đúng</th>
+              <th>Số Câu Sai</th>
+              <th>Chưa Trả Lời</th>
+            </tr>
+          </thead>
+          <tbody id="summary-tbody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="assets/sdk.js"></script>
+  <script src="js/transport.js"></script>
+  <script src="js/content-loader.js"></script>
+  <script src="js/room-controller.js"></script>
+  <script src="js/audio-manager.js"></script>
+  <script>
+    (function () {
+      'use strict';
+
+      // Sinh hoặc khôi phục mã phòng ngẫu nhiên 4 ký tự dễ nhớ
+      function generateRoomCode() {
+        const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+        let res = '';
+        for (let i = 0; i < 4; i++) {
+          res += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        return res;
+      }
+
+      const urlParams = new URLSearchParams(window.location.search);
+      let roomCode = urlParams.get('room');
+      if (!roomCode) {
+        try {
+          roomCode = sessionStorage.getItem('TIM_BO_TEACHER_ROOM');
+        } catch {}
+      }
+      if (!roomCode) {
+        roomCode = generateRoomCode();
+        try {
+          sessionStorage.setItem('TIM_BO_TEACHER_ROOM', roomCode);
+        } catch {}
+      }
+      roomCode = roomCode.toUpperCase().trim();
+
+      const teacherIdentity = { id: 'teacher_host', name: 'Giáo viên' };
+      const transport = RoomTransport.create();
+      transport.join(roomCode, teacherIdentity);
+
+      let controller = null;
+      let loadedBank = null;
+
+      // DOM Elements
+      const elRoomCode = document.getElementById('room-code-val');
+      const elStudentCount = document.getElementById('student-count-badge');
+      const elBankTitle = document.getElementById('bank-title');
+      const elBankMeta = document.getElementById('bank-meta');
+      const elBtnStart = document.getElementById('btn-start-game');
+      const elBtnEnd = document.getElementById('btn-end-game');
+      const elBtnReload = document.getElementById('btn-reload-content');
+      const elTeacherRoster = document.getElementById('teacher-roster');
+      const elStatsBox = document.getElementById('playing-stats-box');
+      const elStatsTbody = document.getElementById('stats-tbody');
+      const elQuestionsPreview = document.getElementById('questions-preview-list');
+      const elSummary = document.getElementById('summary-section');
+      const elSummaryTbody = document.getElementById('summary-tbody');
+      const elTeacherPodium = document.getElementById('teacher-podium');
+      const elBtnExportCsv = document.getElementById('btn-export-csv');
+      const elBtnNewRound = document.getElementById('btn-new-round');
+      const elBtnOpenStudents = document.getElementById('btn-open-students');
+      const elBtnNewRoom = document.getElementById('btn-new-room');
+      const elRosterStatusHint = document.getElementById('roster-status-hint');
+
+      elRoomCode.textContent = roomCode;
+
+      // 1. Tải ngân hàng câu hỏi
+      async function loadQuestions() {
+        try {
+          const cfg = ContentLoader.getSavedSourceConfig();
+          loadedBank = await ContentLoader.loadQuestionBank(cfg);
+
+          elBankTitle.textContent = loadedBank.title;
+          elBankMeta.textContent = `Phiên bản: ${loadedBank.contentVersion} | ${loadedBank.questions.length} câu hỏi`;
+
+          renderQuestionsPreview(loadedBank.questions);
+
+          if (!controller) {
+            controller = RoomController.createTeacherController(transport, loadedBank);
+            controller.onChange(() => updateUI());
+          } else {
+            controller.setQuestionBank(loadedBank);
+          }
+
+          updateUI();
+        } catch (err) {
+          elBankTitle.textContent = 'Lỗi tải câu hỏi';
+          elBankMeta.textContent = err.message;
+          alert('Không thể tải ngân hàng câu hỏi: ' + err.message);
+        }
+      }
+
+      function renderQuestionsPreview(questions) {
+        elQuestionsPreview.innerHTML = '';
+        questions.forEach((q, idx) => {
+          const item = document.createElement('div');
+          item.style.cssText = 'background: rgba(255,255,255,0.04); padding: 12px; border-radius: 8px; border-left: 3px solid var(--primary);';
+          
+          let optsHtml = '';
+          q.options.forEach(opt => {
+            const isCorrect = (opt.id === q.correctOptionId);
+            optsHtml += `
+              <div style="font-size: 0.85rem; color: ${isCorrect ? '#38b000' : 'var(--text-sub)'}; font-weight: ${isCorrect ? '700' : 'normal'}; margin-top: 4px;">
+                ${isCorrect ? '✓ ' : '• '} ${opt.id.toUpperCase()}. ${escapeHtml(opt.text)}
+              </div>
+            `;
+          });
+
+          item.innerHTML = `
+            <div style="font-weight: 700; font-size: 0.9rem; color: #fff; margin-bottom: 6px;">
+              Câu ${idx + 1}: ${escapeHtml(q.prompt)}
+            </div>
+            ${optsHtml}
+          `;
+          elQuestionsPreview.appendChild(item);
+        });
+      }
+
+      // 2. Lắng nghe cập nhật từ Transport
+      transport.onEvent((envelope) => {
+        const { type } = envelope;
+        if (type === 'rosterUpdate' || type === 'playerJoin' || type === 'playerLeave' || type === 'answerResult' || type === 'gameStart' || type === 'gameEnd') {
+          updateUI();
+        }
+      });
+
+      function updateUI() {
+        if (!controller) return;
+        const roster = controller.getRoster();
+        const lb = controller.getLeaderboard();
+        const status = controller.getStatus();
+        const totalQ = loadedBank ? loadedBank.questions.length : 0;
+
+        // Cập nhật số lượng học sinh
+        elStudentCount.textContent = `${roster.length} / 4`;
+
+        // Điều khiển nút Bắt đầu (cho phép 1 - 4 học sinh)
+        if (status === 'waiting') {
+          elBtnStart.style.display = 'block';
+          elBtnEnd.style.display = 'none';
+          elStatsBox.style.display = 'none';
+
+          if (roster.length >= 1) {
+            elBtnStart.disabled = false;
+            elBtnStart.classList.add('btn-ready');
+            elBtnStart.textContent = `🚀 BẮT ĐẦU TRÒ CHƠI (${roster.length} HỌC SINH SẴN SÀNG)`;
+            elRosterStatusHint.textContent = 'Lớp đã có học sinh! Thầy/Cô có thể bấm Bắt Đầu ngay!';
+            elRosterStatusHint.style.color = 'var(--primary)';
+          } else {
+            elBtnStart.disabled = true;
+            elBtnStart.classList.remove('btn-ready');
+            elBtnStart.textContent = '🚀 BẮT ĐẦU TRÒ CHƠI (CẦN ÍT NHẤT 1 HỌC SINH)';
+            elRosterStatusHint.textContent = 'Đang chờ học sinh vào phòng...';
+            elRosterStatusHint.style.color = 'var(--gold)';
+          }
+        } else if (status === 'playing') {
+          elBtnStart.style.display = 'none';
+          elBtnEnd.style.display = 'block';
+          elStatsBox.style.display = 'block';
+          elRosterStatusHint.textContent = 'Trò chơi đang diễn ra...';
+        } else if (status === 'ended') {
+          elBtnStart.style.display = 'none';
+          elBtnEnd.style.display = 'none';
+          showSummaryScreen(lb);
+        }
+
+        // Render Roster Cards
+        elTeacherRoster.innerHTML = '';
+        if (roster.length === 0) {
+          elTeacherRoster.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; padding: 30px; color: var(--text-sub);">
+              Chưa có học sinh nào. Học sinh truy cập trang và nhập mã <strong>${roomCode}</strong>!
+            </div>`;
+        } else {
+          roster.forEach(p => {
+            const card = document.createElement('div');
+            card.className = 'student-card' + (p.status === 'finished' ? ' finished' : ' active');
+            card.innerHTML = `
+              <div class="avatar-badge">${p.avatar || '🚀'}</div>
+              <div class="student-info">
+                <div class="student-name">${escapeHtml(p.name)}</div>
+                <div class="student-stats">
+                  <span class="cow-badge">🐮 ${p.cowsRescued || 0} bò</span>
+                  <span>⭐ ${p.score || 0} điểm</span>
+                </div>
+              </div>
+            `;
+            elTeacherRoster.appendChild(card);
+          });
+        }
+
+        // Render Live Stats Table
+        if (status === 'playing') {
+          elStatsTbody.innerHTML = '';
+          roster.forEach(p => {
+            const tr = document.createElement('tr');
+            const progress = `${p.currentQuestionIndex || 0} / ${totalQ}`;
+            const correctRatio = `${p.correctCount || 0} đúng / ${p.incorrectCount || 0} sai`;
+            let statusText = 'Đang suy nghĩ 🤔';
+            if (p.status === 'finished') statusText = 'Đã hoàn thành 🎉';
+
+            tr.innerHTML = `
+              <td><strong>${escapeHtml(p.name)}</strong></td>
+              <td style="color: var(--gold); font-weight: 700;">${p.score}</td>
+              <td>🐮 ${p.cowsRescued || 0}</td>
+              <td>${progress}</td>
+              <td>${correctRatio}</td>
+              <td>${statusText}</td>
+            `;
+            elStatsTbody.appendChild(tr);
+          });
+        }
+      }
+
+      function showSummaryScreen(lb) {
+        elSummary.style.display = 'block';
+        elStatsBox.style.display = 'none';
+
+        // Render Podium
+        elTeacherPodium.innerHTML = '';
+        const topPlayers = lb.slice(0, 4);
+        const visualOrder = [1, 0, 2, 3];
+
+        visualOrder.forEach(orderIdx => {
+          if (orderIdx < topPlayers.length) {
+            const p = topPlayers[orderIdx];
+            const rank = p.rank || (orderIdx + 1);
+            const step = document.createElement('div');
+            step.className = `podium-step rank-${rank}`;
+            step.innerHTML = `
+              <div class="podium-avatar">${p.avatar || '🚀'}</div>
+              <div style="font-weight: 700; font-size: 0.9rem; margin-bottom: 4px;">${escapeHtml(p.name)}</div>
+              <div style="font-size: 0.8rem; color: var(--gold); margin-bottom: 6px;">🐮 ${p.cowsRescued || 0} bò</div>
+              <div class="podium-block">#${rank}</div>
+            `;
+            elTeacherPodium.appendChild(step);
+          }
+        });
+
+        // Render Summary Table
+        elSummaryTbody.innerHTML = '';
+        lb.forEach(p => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td style="font-weight: 800; color: var(--gold);">#${p.rank}</td>
+            <td><strong>${escapeHtml(p.name)}</strong></td>
+            <td style="color: var(--gold); font-weight: 700;">${p.score}</td>
+            <td>🐮 ${p.cowsRescued || 0}</td>
+            <td style="color: #38b000;">${p.correctCount || 0}</td>
+            <td style="color: #ff5964;">${p.incorrectCount || 0}</td>
+            <td style="color: var(--text-sub);">${p.unansweredCount || 0}</td>
+          `;
+          elSummaryTbody.appendChild(tr);
+        });
+      }
+
+      // Xuất CSV an toàn chuẩn quốc tế
+      function exportCsv() {
+        if (!controller) return;
+        const lb = controller.getLeaderboard();
+
+        const cleanCell = (str) => {
+          let s = String(str ?? '').replace(/"/g, '""');
+          if (/^[=\+\-@]/.test(s)) {
+            s = "'" + s;
+          }
+          return `"${s}"`;
+        };
+
+        const headers = ['Hạng', 'Mã Học Sinh', 'Tên Học Sinh', 'Điểm Số', 'Số Bò Cứu', 'Số Câu Đúng', 'Số Câu Sai', 'Chưa Trả Lời'];
+        const rows = lb.map(p => [
+          p.rank,
+          p.playerId,
+          p.name,
+          p.score,
+          p.cowsRescued,
+          p.correctCount,
+          p.incorrectCount,
+          p.unansweredCount
+        ]);
+
+        const csvContent = '\uFEFF' + [headers, ...rows].map(row => row.map(cleanCell).join(',')).join('\r\n');
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `ket_qua_tim_bo_${roomCode}_${Date.now()}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      }
+
+      // Nút mở 4 tab học sinh tự động để thử nghiệm
+      elBtnOpenStudents.addEventListener('click', () => {
+        const students = [
+          { name: 'MinhAnh', avatar: '🚀' },
+          { name: 'BaoNam', avatar: '👨‍🚀' },
+          { name: 'ThuTrang', avatar: '👩‍🚀' },
+          { name: 'DucHuy', avatar: '🛸' }
+        ];
+
+        students.forEach((stu, i) => {
+          setTimeout(() => {
+            window.open(`student.html?room=${encodeURIComponent(roomCode)}&name=${encodeURIComponent(stu.name)}&avatar=${encodeURIComponent(stu.avatar)}`, '_blank');
+          }, i * 200);
+        });
+      });
+
+      // Nút đổi phòng mới
+      elBtnNewRoom.addEventListener('click', () => {
+        if (confirm('Thầy/Cô có muốn tạo một mã phòng mới hoàn toàn?')) {
+          sessionStorage.removeItem('TIM_BO_TEACHER_ROOM');
+          window.location.href = 'teacher.html';
+        }
+      });
+
+      // Nút điều khiển
+      elBtnStart.addEventListener('click', () => {
+        try {
+          controller.startGame();
+          updateUI();
+        } catch (err) {
+          alert(err.message);
+        }
+      });
+
+      elBtnEnd.addEventListener('click', () => {
+        if (confirm('Thầy/Cô có chắc chắn muốn kết thúc vòng chơi ngay bây giờ?')) {
+          controller.endGame();
+          updateUI();
+        }
+      });
+
+      elBtnReload.addEventListener('click', () => {
+        loadQuestions();
+      });
+
+      elBtnExportCsv.addEventListener('click', exportCsv);
+
+      elBtnNewRound.addEventListener('click', () => {
+        if (confirm('Bắt đầu vòng chơi mới cho cả lớp?')) {
+          elSummary.style.display = 'none';
+          controller.startGame();
+          updateUI();
+        }
+      });
+
+      function escapeHtml(str) {
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+      }
+
+      // Mute button
+      const muteBtn = document.getElementById('mute-btn');
+      if (muteBtn) {
+        const updateIcon = () => { muteBtn.textContent = AudioManager.isMuted() ? '🔇' : '🔊'; };
+        updateIcon();
+        muteBtn.addEventListener('click', () => {
+          AudioManager.toggleMute();
+          updateIcon();
+        });
+      }
+
+      // Init
+      loadQuestions();
+    })();
+  </script>
+</body>
+</html>

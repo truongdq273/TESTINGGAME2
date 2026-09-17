@@ -1,0 +1,152 @@
+<svg viewBox="0 0 240 280" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Thruster Flame Gradient -->
+    <linearGradient id="flameGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fff" />
+      <stop offset="30%" stop-color="#00f2fe" />
+      <stop offset="70%" stop-color="#4facfe" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#000" stop-opacity="0" />
+    </linearGradient>
+
+    <!-- Visor Gradient -->
+    <linearGradient id="visorGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1b2a4a" />
+      <stop offset="40%" stop-color="#0d1b2a" />
+      <stop offset="100%" stop-color="#162947" />
+    </linearGradient>
+
+    <!-- Helmet Reflection Gradient -->
+    <linearGradient id="shineGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.75" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.05" />
+    </linearGradient>
+
+    <!-- Suit Gradient -->
+    <linearGradient id="suitGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="70%" stop-color="#e8ecf4" />
+      <stop offset="100%" stop-color="#cfd8dc" />
+    </linearGradient>
+
+    <!-- Cyan Trim Gradient -->
+    <linearGradient id="trimCyan" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#4ecca3" />
+      <stop offset="100%" stop-color="#00f2fe" />
+    </linearGradient>
+
+    <!-- Glow Filter -->
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="4" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Jetpack Back & Thrusters -->
+  <g class="astro-jetpack">
+    <!-- Oxygen Tank / Backpack -->
+    <rect x="52" y="105" width="34" height="65" rx="14" fill="#90a4ae" stroke="#37474f" stroke-width="3" />
+    <rect x="154" y="105" width="34" height="65" rx="14" fill="#90a4ae" stroke="#37474f" stroke-width="3" />
+    <rect x="80" y="115" width="80" height="50" rx="10" fill="#78909c" stroke="#37474f" stroke-width="3" />
+
+    <!-- Jetpack Thruster Nozzles -->
+    <path d="M60 170 L55 185 L83 185 L78 170 Z" fill="#455a64" stroke="#263238" stroke-width="2" />
+    <path d="M162 170 L157 185 L185 185 L180 170 Z" fill="#455a64" stroke="#263238" stroke-width="2" />
+
+    <!-- Jetpack Flames with Pulse -->
+    <polygon points="58,185 69,228 80,185" fill="url(#flameGrad)" class="thruster-flame" />
+    <polygon points="160,185 171,228 182,185" fill="url(#flameGrad)" class="thruster-flame" />
+  </g>
+
+  <!-- Body Suit -->
+  <g class="astro-body">
+    <!-- Legs -->
+    <!-- Left Leg -->
+    <path d="M85 175 L80 220 Q80 232 94 232 L106 232 Q112 232 110 220 L105 175 Z" fill="url(#suitGrad)" stroke="#37474f" stroke-width="3" />
+    <!-- Left Boot -->
+    <path d="M76 220 C76 215 90 215 106 215 C116 215 120 222 120 232 C120 240 112 242 96 242 C78 242 76 230 76 220 Z" fill="#455a64" stroke="#263238" stroke-width="3" />
+    <path d="M78 236 L118 236" stroke="#4ecca3" stroke-width="3" stroke-linecap="round" />
+
+    <!-- Right Leg -->
+    <path d="M135 175 L130 220 Q128 232 144 232 L156 232 Q162 232 160 220 L155 175 Z" fill="url(#suitGrad)" stroke="#37474f" stroke-width="3" />
+    <!-- Right Boot -->
+    <path d="M126 220 C126 215 140 215 156 215 C166 215 170 222 170 232 C170 240 162 242 146 242 C128 242 126 230 126 220 Z" fill="#455a64" stroke="#263238" stroke-width="3" />
+    <path d="M128 236 L168 236" stroke="#4ecca3" stroke-width="3" stroke-linecap="round" />
+
+    <!-- Torso -->
+    <ellipse cx="120" cy="150" rx="46" ry="40" fill="url(#suitGrad)" stroke="#37474f" stroke-width="3" />
+
+    <!-- Chest Control Unit -->
+    <rect x="100" y="132" width="40" height="30" rx="6" fill="#263238" stroke="#37474f" stroke-width="2" />
+    <!-- Status lights -->
+    <circle cx="109" cy="142" r="3.5" fill="#4ecca3" filter="url(#glow)" />
+    <circle cx="120" cy="142" r="3.5" fill="#ffd166" />
+    <circle cx="131" cy="142" r="3.5" fill="#f72585" />
+    <!-- Gauges/bar -->
+    <rect x="106" y="151" width="28" height="4" rx="2" fill="#00f2fe" />
+
+    <!-- Mission Collar Ring -->
+    <path d="M86 116 C86 112 154 112 154 116 L150 124 L90 124 Z" fill="url(#trimCyan)" stroke="#37474f" stroke-width="2" />
+
+    <!-- Left Arm & Glove (holding laser scanner / pointing) -->
+    <g class="astro-left-arm">
+      <!-- Upper & lower arm pointing toward center -->
+      <path d="M78 126 Q46 135 44 158 Q43 170 34 175" fill="none" stroke="url(#suitGrad)" stroke-width="20" stroke-linecap="round" stroke-linejoin="round" />
+      <path d="M78 126 Q46 135 44 158 Q43 170 34 175" fill="none" stroke="#37474f" stroke-width="20" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.1" />
+      <!-- Glove -->
+      <circle cx="32" cy="178" r="14" fill="#455a64" stroke="#263238" stroke-width="3" />
+      <ellipse cx="38" cy="170" rx="6" ry="9" fill="#455a64" transform="rotate(-30 38 170)" />
+      <!-- Rescue Star Ray Emitter in Left Glove -->
+      <circle cx="28" cy="180" r="4" fill="#ffd166" filter="url(#glow)" />
+    </g>
+
+    <!-- Right Arm & Glove (waving happily) -->
+    <g class="astro-right-arm">
+      <path d="M162 128 Q192 120 198 100 Q202 88 206 78" fill="none" stroke="url(#suitGrad)" stroke-width="20" stroke-linecap="round" />
+      <!-- Glove waving -->
+      <circle cx="208" cy="74" r="14" fill="#455a64" stroke="#263238" stroke-width="3" />
+      <!-- Fingers wave -->
+      <ellipse cx="206" cy="62" rx="4" ry="7" fill="#455a64" />
+      <ellipse cx="213" cy="64" rx="4" ry="7" fill="#455a64" />
+      <ellipse cx="219" cy="69" rx="4" ry="7" fill="#455a64" />
+      <ellipse cx="198" cy="74" rx="5" ry="6" fill="#455a64" />
+    </g>
+  </g>
+
+  <!-- Big Helmet -->
+  <g class="astro-helmet">
+    <!-- Antenna -->
+    <line x1="120" y1="36" x2="120" y2="14" stroke="#78909c" stroke-width="4" stroke-linecap="round" />
+    <circle cx="120" cy="10" r="7" fill="#ffd166" stroke="#f59e0b" stroke-width="2" filter="url(#glow)" />
+
+    <!-- Outer Helmet Ball -->
+    <circle cx="120" cy="76" r="54" fill="url(#suitGrad)" stroke="#37474f" stroke-width="3.5" />
+
+    <!-- Helmet Side Earpieces -->
+    <rect x="62" y="66" width="9" height="20" rx="4" fill="#4ecca3" stroke="#263238" stroke-width="2" />
+    <rect x="169" y="66" width="9" height="20" rx="4" fill="#4ecca3" stroke="#263238" stroke-width="2" />
+
+    <!-- Visor Shield -->
+    <ellipse cx="120" cy="78" rx="42" ry="34" fill="url(#visorGrad)" stroke="#37474f" stroke-width="3" />
+
+    <!-- Cute Friendly Eyes inside Visor -->
+    <g class="astro-face">
+      <!-- Left Eye -->
+      <ellipse cx="106" cy="77" rx="5" ry="7" fill="#ffffff" />
+      <circle cx="105" cy="76" r="3.5" fill="#1b2a4a" />
+      <circle cx="107" cy="74" r="1.5" fill="#ffffff" />
+      <!-- Right Eye -->
+      <ellipse cx="134" cy="77" rx="5" ry="7" fill="#ffffff" />
+      <circle cx="135" cy="76" r="3.5" fill="#1b2a4a" />
+      <circle cx="137" cy="74" r="1.5" fill="#ffffff" />
+      <!-- Cheerful Smile -->
+      <path d="M114 85 Q120 91 126 85" fill="none" stroke="#ffd166" stroke-width="2.5" stroke-linecap="round" />
+      <!-- Rosy Cheeks -->
+      <ellipse cx="98" cy="83" rx="4" ry="2" fill="#ff70a6" opacity="0.6" />
+      <ellipse cx="142" cy="83" rx="4" ry="2" fill="#ff70a6" opacity="0.6" />
+    </g>
+
+    <!-- Glass Reflection Curved Highlight -->
+    <path d="M88 64 C96 52 136 50 152 62 C146 56 110 49 96 58 Z" fill="url(#shineGrad)" />
+    <ellipse cx="98" cy="62" rx="7" ry="4" fill="#ffffff" opacity="0.5" transform="rotate(-20 98 62)" />
+  </g>
+</svg>

@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' ws: wss:; media-src 'self'; frame-src 'self';">
+  <title>Phi Hành Gia Nhí - Tìm Bò (Học Sinh)</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <!-- Header học sinh -->
+  <header class="top-bar">
+    <div class="brand">
+      <div class="brand-icon">
+        <img src="assets/images/image18.svg" alt="Bò logo" />
+      </div>
+      <div>
+        <h1>Tìm Bò Không Gian</h1>
+        <span class="brand-badge">Học Sinh</span>
+      </div>
+    </div>
+
+    <div class="top-actions">
+      <div id="room-status-badge" style="display: none; background: rgba(78, 204, 163, 0.15); border: 1px solid var(--primary); padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 700; color: var(--primary);">
+        Phòng: <span id="active-room-code">----</span>
+      </div>
+      <button id="mute-btn" class="icon-btn" title="Bật/Tắt âm thanh">🔊</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- 1. Màn hình Nhập Mã Phòng & Tên -->
+    <section id="join-section" class="card hero-section">
+      <img src="assets/images/image6.svg" class="hero-img" alt="Phi thuyền" />
+      <h2 style="font-size: 1.8rem; margin-bottom: 8px; color: #fff;">Gia Nhập Biệt Đội Cứu Bò</h2>
+      <p style="color: var(--text-sub); margin-bottom: 24px;">Nhập mã phòng từ Thầy/Cô để lên tàu vũ trụ nhé!</p>
+
+      <form id="join-form">
+        <div class="form-group">
+          <label class="form-label" for="room-code-input">MÃ PHÒNG (4 ký tự)</label>
+          <input type="text" id="room-code-input" class="form-input code-input" maxlength="6" placeholder="VD: COW8" required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="player-name-input">TÊN CỦA BẠN</label>
+          <input type="text" id="player-name-input" class="form-input" maxlength="20" placeholder="VD: Minh Anh, Bảo Nam..." required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">CHỌN AVATAR PHI HÀNH GIA</label>
+          <div id="avatar-selector" style="display: flex; gap: 12px; justify-content: center;">
+            <button type="button" class="avatar-opt btn-secondary" data-avatar="🚀" style="font-size: 1.8rem; width: 56px; height: 56px; border-radius: 12px; cursor: pointer; border: 2px solid var(--primary);">🚀</button>
+            <button type="button" class="avatar-opt btn-secondary" data-avatar="👨‍🚀" style="font-size: 1.8rem; width: 56px; height: 56px; border-radius: 12px; cursor: pointer;">👨‍🚀</button>
+            <button type="button" class="avatar-opt btn-secondary" data-avatar="👩‍🚀" style="font-size: 1.8rem; width: 56px; height: 56px; border-radius: 12px; cursor: pointer;">👩‍🚀</button>
+            <button type="button" class="avatar-opt btn-secondary" data-avatar="🛸" style="font-size: 1.8rem; width: 56px; height: 56px; border-radius: 12px; cursor: pointer;">🛸</button>
+          </div>
+        </div>
+
+        <div id="join-error" style="color: #ff5964; margin-bottom: 16px; font-weight: 600; display: none;"></div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%;">
+          VÀO PHÒNG CHỜ 🌟
+        </button>
+      </form>
+    </section>
+
+    <!-- 2. Màn hình Phòng Chờ (Lobby) -->
+    <section id="lobby-section" class="card" style="display: none; text-align: center; max-width: 680px; margin: 0 auto; width: 100%;">
+      <h2 style="font-size: 1.6rem; color: #fff; margin-bottom: 8px;">Phòng Chờ Khởi Hành</h2>
+      <p style="color: var(--text-sub); margin-bottom: 20px;">
+        Đang đợi Giáo viên bấm "Bắt đầu". Các phi hành gia cùng phòng:
+      </p>
+
+      <div id="lobby-roster" class="roster-grid"></div>
+
+      <div style="background: rgba(255, 209, 102, 0.1); border: 1px dashed var(--gold); padding: 14px; border-radius: 12px; color: var(--gold); font-weight: 600;">
+        💡 Mẹo: Khi vào màn chơi, em có thể bấm phím 1, 2, 3, 4 hoặc A, B, C, D để chọn hành tinh nhanh!
+      </div>
+    </section>
+
+    <!-- 3. Màn hình Chơi Trò Chơi (Iframe Embed + Sidebar) -->
+    <section id="game-section" style="display: none; width: 100%;">
+      <div style="display: grid; grid-template-columns: 1fr 280px; gap: 20px;">
+        <!-- Iframe chứa game.html -->
+        <div style="width: 100%; min-height: 580px; border-radius: var(--radius); overflow: hidden; border: 2px solid var(--border-card);">
+          <iframe id="game-frame" src="about:blank" sandbox="allow-scripts allow-same-origin" style="width: 100%; height: 100%; border: none; min-height: 580px;" title="Game Tìm Bò"></iframe>
+        </div>
+
+        <!-- Sidebar Bảng Xếp Hạng Lớp Trực Tiếp -->
+        <div class="card" style="display: flex; flex-direction: column;">
+          <h3 style="font-size: 1.1rem; color: var(--gold); margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
+            🏆 BẢNG XẾP HẠNG
+          </h3>
+          <div id="live-leaderboard" style="display: flex; flex-direction: column; gap: 10px; flex: 1;"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Màn hình Tổng Kết Chiến Thắng (Victory Podium) -->
+    <section id="victory-section" class="card" style="display: none; text-align: center; max-width: 760px; margin: 0 auto; width: 100%;">
+      <img src="assets/images/image18.svg" style="width: 80px; height: 80px; margin-bottom: 12px; animation: float 3s infinite ease-in-out;" alt="Chiến thắng" />
+      <h2 style="font-size: 2rem; color: var(--gold); margin-bottom: 8px;">XUẤT SẮC! ĐÃ GIẢI CỨU ĐÀN BÒ!</h2>
+      <p style="color: var(--text-sub); margin-bottom: 24px;">Chúc mừng toàn bộ phi hành gia đã hoàn thành sứ mệnh!</p>
+
+      <div id="podium" class="podium-container"></div>
+
+      <div style="margin-top: 30px;">
+        <button id="btn-replay-wait" class="btn btn-secondary" onclick="location.reload();">
+          Về Màn Hình Chính
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <script src="assets/sdk.js"></script>
+  <script src="js/transport.js"></script>
+  <script src="js/content-loader.js"></script>
+  <script src="js/audio-manager.js"></script>
+  <script>
+    (function () {
+      'use strict';
+
+      const transport = RoomTransport.create();
+      let myPlayer = {
+        id: 'stu_' + Math.random().toString(36).substr(2, 7),
+        name: '',
+        avatar: '🚀'
+      };
+      let currentRoomCode = '';
+      let cachedQuestions = [];
+      let heartbeatTimer = null;
+      let gameActive = false;
+
+      // UI Elements
+      const joinSection = document.getElementById('join-section');
+      const lobbySection = document.getElementById('lobby-section');
+      const gameSection = document.getElementById('game-section');
+      const victorySection = document.getElementById('victory-section');
+      const joinForm = document.getElementById('join-form');
+      const roomCodeInput = document.getElementById('room-code-input');
+      const playerNameInput = document.getElementById('player-name-input');
+      const joinError = document.getElementById('join-error');
+      const roomStatusBadge = document.getElementById('room-status-badge');
+      const activeRoomCode = document.getElementById('active-room-code');
+      const lobbyRoster = document.getElementById('lobby-roster');
+      const gameFrame = document.getElementById('game-frame');
+      const liveLeaderboard = document.getElementById('live-leaderboard');
+      const podium = document.getElementById('podium');
+
+      // Avatar selection
+      const avatarBtns = document.querySelectorAll('.avatar-opt');
+      avatarBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          avatarBtns.forEach(b => b.style.borderColor = 'transparent');
+          btn.style.borderColor = 'var(--primary)';
+          myPlayer.avatar = btn.dataset.avatar;
+        });
+      });
+
+      function doJoin(code, name, avatar) {
+        if (!code || !name) return;
+        myPlayer.name = name;
+        if (avatar) myPlayer.avatar = avatar;
+        currentRoomCode = code.toUpperCase().trim();
+
+        try {
+          transport.join(currentRoomCode, myPlayer);
+          transport.send('playerJoin', { player: myPlayer });
+
+          joinSection.style.display = 'none';
+          lobbySection.style.display = 'block';
+          roomStatusBadge.style.display = 'block';
+          activeRoomCode.textContent = currentRoomCode;
+
+          // Hiển thị ngay chính mình trong danh sách phòng chờ
+          updateRosterUI([myPlayer]);
+
+          sessionStorage.setItem('TIM_BO_STUDENT', JSON.stringify({
+            roomCode: currentRoomCode,
+            player: myPlayer
+          }));
+
+          // Preload iframe ngay từ khi vào lobby để sẵn sàng
+          if (gameFrame.src === 'about:blank' || !gameFrame.src.includes('game.html')) {
+            gameFrame.src = `game.html?playerId=${encodeURIComponent(myPlayer.id)}`;
+          }
+
+          // Heartbeat định kỳ gửi playerJoin
+          if (heartbeatTimer) clearInterval(heartbeatTimer);
+          heartbeatTimer = setInterval(() => {
+            if (!gameActive && currentRoomCode) {
+              transport.send('playerJoin', { player: myPlayer });
+            } else {
+              clearInterval(heartbeatTimer);
+            }
+          }, 2000);
+
+        } catch (err) {
+          joinError.textContent = 'Không thể kết nối phòng: ' + err.message;
+          joinError.style.display = 'block';
+        }
+      }
+
+      // Form submit: Join Room
+      joinForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        joinError.style.display = 'none';
+        doJoin(roomCodeInput.value, playerNameInput.value, myPlayer.avatar);
+      });
+
+      // Auto-join from URL params if both room and name exist
+      const urlParams = new URLSearchParams(window.location.search);
+      const qRoom = urlParams.get('room');
+      const qName = urlParams.get('name');
+      const qAvatar = urlParams.get('avatar');
+
+      if (qRoom) roomCodeInput.value = qRoom.toUpperCase();
+      if (qName) playerNameInput.value = qName;
+      if (qAvatar) {
+        myPlayer.avatar = qAvatar;
+        avatarBtns.forEach(btn => {
+          if (btn.dataset.avatar === qAvatar) {
+            avatarBtns.forEach(b => b.style.borderColor = 'transparent');
+            btn.style.borderColor = 'var(--primary)';
+          }
+        });
+      }
+
+      if (qRoom && qName) {
+        doJoin(qRoom, qName, qAvatar);
+      }
+
+      // Gửi lệnh bắt đầu vào game iframe
+      function sendStartToGame() {
+        if (!gameFrame || !gameFrame.contentWindow) return;
+
+        const payloadQuestions = (cachedQuestions && cachedQuestions.length > 0) ? cachedQuestions : [];
+
+        // Gửi loadContent
+        gameFrame.contentWindow.postMessage({
+          type: 'loadContent',
+          payload: { questions: payloadQuestions }
+        }, window.location.origin);
+
+        // Gửi startGame
+        gameFrame.contentWindow.postMessage({
+          type: 'startGame'
+        }, window.location.origin);
+      }
+
+      function launchGame(questions) {
+        if (gameActive) return;
+        gameActive = true;
+        if (heartbeatTimer) clearInterval(heartbeatTimer);
+
+        if (questions && questions.length > 0) {
+          cachedQuestions = questions;
+        }
+
+        lobbySection.style.display = 'none';
+        victorySection.style.display = 'none';
+        gameSection.style.display = 'block';
+
+        if (gameFrame.src === 'about:blank' || !gameFrame.src.includes('game.html')) {
+          gameFrame.src = `game.html?playerId=${encodeURIComponent(myPlayer.id)}`;
+        }
+
+        sendStartToGame();
+        setTimeout(sendStartToGame, 250);
+        setTimeout(sendStartToGame, 600);
+      }
+
+      // Transport Events & Host Token Verification
+      let expectedHostToken = null;
+
+      transport.onEvent((envelope) => {
+        const { type, payload } = envelope;
+
+        if (type === 'joinRejected') {
+          alert(payload.reason || 'Không thể vào phòng!');
+          location.reload();
+        } else if (type === 'roomWelcome') {
+          if (payload.hostToken) {
+            expectedHostToken = payload.hostToken;
+          }
+          if (payload.status === 'playing' && payload.questions && payload.questions.length > 0) {
+            cachedQuestions = payload.questions;
+            launchGame(cachedQuestions);
+          }
+        } else if (type === 'rosterUpdate') {
+          if (expectedHostToken && payload.hostToken && payload.hostToken !== expectedHostToken) {
+            console.warn('[Security] Bỏ qua rosterUpdate không đúng hostToken');
+            return;
+          }
+          updateRosterUI(payload.roster || []);
+          updateLeaderboardUI(payload.leaderboard || []);
+
+          // Nếu trạng thái phòng là đang chơi mà màn học sinh chưa mở, mở ngay lập tức!
+          if (payload.status === 'playing' && !gameActive) {
+            launchGame(cachedQuestions);
+          }
+        } else if (type === 'gameStart') {
+          if (expectedHostToken && payload.hostToken && payload.hostToken !== expectedHostToken) {
+            console.warn('[Security] Bỏ qua gameStart không đúng hostToken');
+            return;
+          }
+          cachedQuestions = payload.questions || [];
+          launchGame(cachedQuestions);
+        } else if (type === 'answerResult') {
+          if (expectedHostToken && payload.hostToken && payload.hostToken !== expectedHostToken) {
+            console.warn('[Security] Bỏ qua answerResult không đúng hostToken');
+            return;
+          }
+          if (gameFrame && gameFrame.contentWindow) {
+            gameFrame.contentWindow.postMessage({
+              type: 'answerResult',
+              payload: payload
+            }, window.location.origin);
+          }
+        } else if (type === 'gameEnd') {
+          if (expectedHostToken && payload.hostToken && payload.hostToken !== expectedHostToken) {
+            console.warn('[Security] Bỏ qua gameEnd không đúng hostToken');
+            return;
+          }
+          showVictory(payload.leaderboard || []);
+        }
+      });
+
+      // Lắng nghe thông điệp từ game.html (iframe)
+      window.addEventListener('message', (e) => {
+        if (e.origin !== window.location.origin) return;
+        const msg = e.data;
+        if (!msg || !msg.type) return;
+
+        if (msg.type === 'gameAnswerAttempt') {
+          transport.send('answerAttempt', msg.payload);
+        } else if (msg.type === 'gameReady') {
+          if (gameActive || cachedQuestions.length > 0) {
+            sendStartToGame();
+            setTimeout(sendStartToGame, 200);
+          }
+        }
+      });
+
+      function updateRosterUI(roster) {
+        if (!lobbyRoster) return;
+        lobbyRoster.innerHTML = '';
+        roster.forEach(p => {
+          const card = document.createElement('div');
+          card.className = 'student-card' + (p.id === myPlayer.id ? ' active' : '');
+          card.innerHTML = `
+            <div class="avatar-badge">${p.avatar || '🚀'}</div>
+            <div class="student-info">
+              <div class="student-name">${escapeHtml(p.name)} ${p.id === myPlayer.id ? '(Bạn)' : ''}</div>
+              <div class="student-stats">
+                <span class="cow-badge">🐮 ${p.cowsRescued || 0}</span>
+                <span>⭐ ${p.score || 0} điểm</span>
+              </div>
+            </div>
+          `;
+          lobbyRoster.appendChild(card);
+        });
+      }
+
+      function updateLeaderboardUI(lb) {
+        if (!liveLeaderboard) return;
+        liveLeaderboard.innerHTML = '';
+        lb.forEach((p, idx) => {
+          const item = document.createElement('div');
+          item.style.cssText = `
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 8px 12px; background: rgba(255,255,255,0.05); border-radius: 10px;
+            border: 1px solid ${p.playerId === myPlayer.id ? 'var(--primary)' : 'transparent'};
+          `;
+          item.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-weight: 800; color: ${idx === 0 ? 'var(--gold)' : 'var(--text-sub)'};">#${p.rank || (idx + 1)}</span>
+              <span>${p.avatar || '🚀'}</span>
+              <span style="font-weight: 600; font-size: 0.95rem;">${escapeHtml(p.name)}</span>
+            </div>
+            <div style="font-weight: 700; color: var(--primary);">
+              ${p.score} đ
+            </div>
+          `;
+          liveLeaderboard.appendChild(item);
+        });
+      }
+
+      function showVictory(lb) {
+        gameActive = false;
+        gameSection.style.display = 'none';
+        lobbySection.style.display = 'none';
+        victorySection.style.display = 'block';
+
+        if (!podium) return;
+        podium.innerHTML = '';
+
+        const topPlayers = lb.slice(0, 4);
+        const visualOrder = [1, 0, 2, 3];
+
+        visualOrder.forEach(orderIdx => {
+          if (orderIdx < topPlayers.length) {
+            const p = topPlayers[orderIdx];
+            const rank = p.rank || (orderIdx + 1);
+            const step = document.createElement('div');
+            step.className = `podium-step rank-${rank}`;
+            step.innerHTML = `
+              <div class="podium-avatar">${p.avatar || '🚀'}</div>
+              <div style="font-weight: 700; font-size: 0.9rem; margin-bottom: 4px;">${escapeHtml(p.name)}</div>
+              <div style="font-size: 0.8rem; color: var(--gold); margin-bottom: 6px;">🐮 ${p.cowsRescued || 0} bò</div>
+              <div class="podium-block">#${rank}</div>
+            `;
+            podium.appendChild(step);
+          }
+        });
+      }
+
+      function escapeHtml(str) {
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+      }
+
+      // Mute button
+      const muteBtn = document.getElementById('mute-btn');
+      if (muteBtn) {
+        const updateIcon = () => { muteBtn.textContent = AudioManager.isMuted() ? '🔇' : '🔊'; };
+        updateIcon();
+        muteBtn.addEventListener('click', () => {
+          AudioManager.toggleMute();
+          updateIcon();
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

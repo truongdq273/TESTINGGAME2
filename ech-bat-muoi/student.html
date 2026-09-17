@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; media-src 'self' data:; connect-src 'self' ws: wss: https://docs.google.com https://raw.githubusercontent.com https://script.google.com;">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Màn Hình Học Sinh - Ếch Bắt Muỗi</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    #canvas-confetti {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 100;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas-confetti"></canvas>
+
+  <div class="app-container">
+    <!-- Entrance Form -->
+    <div id="view-join" class="card" style="max-width:440px; margin: 40px auto; text-align:center;">
+      <div style="font-size:3.5rem; margin-bottom:8px;">🐸</div>
+      <h2 style="color:var(--primary-dark); font-size:1.6rem; margin-bottom:6px;">Tham Gia Lớp Học</h2>
+      <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:20px;">Nhập mã phòng và tên của bạn để bắt đầu</p>
+
+      <form id="join-form" style="display:flex; flex-direction:column; gap:14px; text-align:left;">
+        <div>
+          <label style="font-weight:700; font-size:0.85rem; color:var(--text-muted); display:block; margin-bottom:4px;">MÃ PHÒNG (4 KÝ TỰ)</label>
+          <input type="text" id="input-room-code" required maxlength="6" placeholder="Ví dụ: FROG" style="width:100%; padding:12px 14px; font-size:1.2rem; font-weight:800; text-transform:uppercase; border:2px solid #ccdcd2; border-radius:10px; font-family:monospace; text-align:center;" />
+        </div>
+
+        <div>
+          <label style="font-weight:700; font-size:0.85rem; color:var(--text-muted); display:block; margin-bottom:4px;">TÊN CỦA BẠN</label>
+          <input type="text" id="input-student-name" required maxlength="20" placeholder="Ví dụ: Minh An" style="width:100%; padding:12px 14px; font-size:1.05rem; font-weight:600; border:2px solid #ccdcd2; border-radius:10px;" />
+        </div>
+
+        <button type="submit" class="btn-primary" style="width:100%; margin-top:8px;">
+          🚀 Vào Lớp Học
+        </button>
+      </form>
+    </div>
+
+    <!-- Student Lobby -->
+    <div id="view-student-lobby" class="card" style="display:none; text-align:center;">
+      <div class="room-code-banner" style="margin-bottom:16px;">
+        <div class="room-code-label">BẠN ĐANG Ở PHÒNG</div>
+        <div class="room-code-value" id="student-disp-room-code">----</div>
+        <p style="color:var(--primary-dark); font-weight:700; margin-top:4px;">Đang chờ giáo viên bắt đầu trò chơi...</p>
+      </div>
+
+      <h3 class="card-title" style="justify-content:center;">Bạn Cùng Lớp Trong Phòng</h3>
+      <div class="roster-grid" id="student-roster-container"></div>
+    </div>
+
+    <!-- Active Game Iframe Wrapper -->
+    <div id="view-gameplay" style="display:none; width:100%;">
+      <div class="game-frame-wrapper">
+        <iframe id="game-iframe" class="game-frame" src="game.html" sandbox="allow-scripts allow-same-origin" title="Trò chơi Ếch bắt muỗi"></iframe>
+      </div>
+    </div>
+
+    <!-- Podium Summary -->
+    <div id="view-podium" class="card" style="display:none; text-align:center;">
+      <h2 style="font-size:2rem; color:var(--primary-dark); margin-bottom:6px;">Chúc Mừng Cả Lớp! 🎉</h2>
+      <p style="color:var(--text-muted);">Trò chơi đã kết thúc, đây là bảng xếp hạng chung cuộc:</p>
+
+      <div class="podium-container" id="podium-steps">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <div style="margin-top:24px;">
+        <button id="btn-back-home" class="btn-secondary">
+          🚪 Thoát
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="sdk.js"></script>
+  <script src="content-loader.js"></script>
+  <script src="transport.js"></script>
+  <script src="room-controller.js"></script>
+  <script src="student.js"></script>
+</body>
+</html>
+
+
+
+
+

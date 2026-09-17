@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; media-src 'self' data:; connect-src 'self' ws: wss: https://docs.google.com https://raw.githubusercontent.com https://script.google.com;">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản Trị Nội Dung Câu Hỏi - Ếch Bắt Muỗi</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-container" style="max-width:800px;">
+    <header class="app-header">
+      <div class="brand-title">
+        <span class="frog-emoji">⚙️</span>
+        <span>Quản Trị Nguồn Câu Hỏi (Chủ Nội Dung / IT)</span>
+      </div>
+      <div class="badge-status badge-ready">Admin Portal</div>
+    </header>
+
+    <div class="card">
+      <h2 style="color:var(--primary-dark); font-size:1.4rem; margin-bottom:10px;">Cấu Hình Nguồn Dữ Liệu</h2>
+      <p style="color:var(--text-muted); font-size:0.95rem; margin-bottom:16px;">
+        Chủ nội dung có thể dán link Google Docs, Google Sheets hoặc đường dẫn JSON. Trò chơi sẽ tự động tải phiên bản mới nhất mà không cần viết lại mã nguồn hay nhờ IT thay file.
+      </p>
+
+      <div style="margin-bottom:16px;">
+        <label style="font-weight:700; font-size:0.85rem; color:var(--text-muted); display:block; margin-bottom:6px;">URL NGUỒN CÂU HỎI (GOOGLE DOCS / JSON)</label>
+        <input type="text" id="source-url-input" style="width:100%; padding:12px 14px; font-size:1rem; border:2px solid #ccdcd2; border-radius:10px;" value="https://docs.google.com/document/d/1wWuypeEIJ55liZRXD32bb9boXTt6Xs7HNCow7IgqDo4/edit?usp=sharing" />
+      </div>
+
+      <div style="display:flex; gap:12px;">
+        <button id="btn-load-test" class="btn-primary">
+          🔍 Kiểm Tra & Tải Thử
+        </button>
+        <button id="btn-save-config" class="btn-secondary">
+          💾 Lưu Cấu Hình
+        </button>
+      </div>
+    </div>
+
+    <!-- Preview Results -->
+    <div id="preview-card" class="card" style="display:none;">
+      <h3 class="card-title">Kết Quả Đọc & Xác Thực</h3>
+      <div id="preview-meta" style="background:#f4f8f6; padding:12px 16px; border-radius:8px; margin-bottom:16px; font-size:0.9rem;"></div>
+      <div id="preview-questions-list"></div>
+    </div>
+  </div>
+
+  <script src="content-loader.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>
+
+
+
+
+

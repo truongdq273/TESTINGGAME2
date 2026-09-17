@@ -1,0 +1,216 @@
+{
+  "schemaVersion": 1,
+  "title": "English Practice Exercise: The Animal Kingdom",
+  "topic": "Animals Vocabulary, Habitats & Characteristics",
+  "sourceUrl": "https://docs.google.com/document/d/1wWuypeEIJ55liZRXD32bb9boXTt6Xs7HNCow7IgqDo4/edit?usp=sharing",
+  "questions": [
+    {
+      "id": "q-1",
+      "type": "single-choice",
+      "prompt": "Which animal is known as the \"King of the Jungle\"?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Tiger"
+        },
+        {
+          "id": "b",
+          "text": "Lion"
+        },
+        {
+          "id": "c",
+          "text": "Elephant"
+        },
+        {
+          "id": "d",
+          "text": "Gorilla"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "Lions are traditionally nicknamed the \"King of the Jungle\".",
+      "points": 10
+    },
+    {
+      "id": "q-2",
+      "type": "single-choice",
+      "prompt": "What do we call a baby dog?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Kitten"
+        },
+        {
+          "id": "b",
+          "text": "Calf"
+        },
+        {
+          "id": "c",
+          "text": "Cub"
+        },
+        {
+          "id": "d",
+          "text": "Puppy"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "A baby dog is called a puppy (Kitten = cat, Calf = cow, Cub = bear/lion).",
+      "points": 10
+    },
+    {
+      "id": "q-3",
+      "type": "single-choice",
+      "prompt": "Which of the following animals is a mammal that can fly?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Penguin"
+        },
+        {
+          "id": "b",
+          "text": "Bat"
+        },
+        {
+          "id": "c",
+          "text": "Eagle"
+        },
+        {
+          "id": "d",
+          "text": "Ostrich"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "Bats are the only mammals naturally capable of true and sustained flight.",
+      "points": 10
+    },
+    {
+      "id": "q-4",
+      "type": "single-choice",
+      "prompt": "Which farm animal gives us wool to make warm clothes?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Cow"
+        },
+        {
+          "id": "b",
+          "text": "Horse"
+        },
+        {
+          "id": "c",
+          "text": "Sheep"
+        },
+        {
+          "id": "d",
+          "text": "Pig"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "Sheep are sheared for their fleece, which is processed into wool.",
+      "points": 10
+    },
+    {
+      "id": "q-5",
+      "type": "single-choice",
+      "prompt": "What is the largest mammal living on Earth?",
+      "options": [
+        {
+          "id": "a",
+          "text": "African Elephant"
+        },
+        {
+          "id": "b",
+          "text": "Blue Whale"
+        },
+        {
+          "id": "c",
+          "text": "Giraffe"
+        },
+        {
+          "id": "d",
+          "text": "Hippopotamus"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "The blue whale is the largest animal ever known to have lived on Earth.",
+      "points": 10
+    },
+    {
+      "id": "q-6",
+      "type": "single-choice",
+      "prompt": "Which animal carries its baby in a pouch?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Kangaroo"
+        },
+        {
+          "id": "b",
+          "text": "Panda"
+        },
+        {
+          "id": "c",
+          "text": "Camel"
+        },
+        {
+          "id": "d",
+          "text": "Zebra"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "Kangaroos are marsupials and carry their young (joeys) in a pouch.",
+      "points": 10
+    },
+    {
+      "id": "q-7",
+      "type": "single-choice",
+      "prompt": "What sound does a duck make?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Moo"
+        },
+        {
+          "id": "b",
+          "text": "Quack"
+        },
+        {
+          "id": "c",
+          "text": "Bark"
+        },
+        {
+          "id": "d",
+          "text": "Meow"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "Ducks make a \"quack\" sound.",
+      "points": 10
+    },
+    {
+      "id": "q-8",
+      "type": "single-choice",
+      "prompt": "Which of these animals is an amphibian that can live both in water and on land?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Crocodile"
+        },
+        {
+          "id": "b",
+          "text": "Lizard"
+        },
+        {
+          "id": "c",
+          "text": "Frog"
+        },
+        {
+          "id": "d",
+          "text": "Snake"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "Frogs are amphibians, starting life in water as tadpoles and living on land as adults.",
+      "points": 10
+    }
+  ]
+}

@@ -1,0 +1,128 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; media-src 'self' data:; connect-src 'self' ws: wss: https://docs.google.com https://raw.githubusercontent.com https://script.google.com;">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bảng Điều Khiển Giáo Viên - Ếch Bắt Muỗi</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-container">
+    <header class="app-header">
+      <div class="brand-title">
+        <span class="frog-emoji">👩‍🏫</span>
+        <span>Bảng Giáo Viên: Ếch Bắt Muỗi</span>
+      </div>
+      <div id="room-status-badge" class="badge-status badge-ready">Phòng Chờ</div>
+    </header>
+
+    <!-- Lobby Section -->
+    <div id="view-lobby" class="card">
+      <div class="room-code-banner">
+        <div class="room-code-label">MÃ PHÒNG HỌC</div>
+        <div class="room-code-value" id="disp-room-code">----</div>
+        <p style="color:var(--text-muted); font-size:0.9rem;">Học sinh mở trang <strong>student.html</strong> và nhập mã này để vào lớp</p>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <h3 class="card-title" style="margin:0;">Danh Sách Học Sinh (<span id="roster-count">0</span>/4 bạn)</h3>
+        <span style="font-size:0.85rem; color:var(--text-muted);">Tối thiểu 1 bạn để bắt đầu</span>
+      </div>
+
+      <div class="roster-grid" id="roster-container">
+        <div style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 24px;">
+          Đang chờ học sinh tham gia phòng...
+        </div>
+      </div>
+
+      <div style="margin-top:24px; display:flex; gap:12px; justify-content:flex-end;">
+        <button id="btn-start-game" class="btn-primary" disabled>
+          ▶ Bắt Đầu Trò Chơi
+        </button>
+      </div>
+    </div>
+
+    <!-- Live In-Game Monitoring Section -->
+    <div id="view-game" class="card" style="display:none;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <div>
+          <h2 style="color:var(--primary-dark); font-size:1.4rem;">Theo Dõi Tiến Độ Lớp Học</h2>
+          <p style="color:var(--text-muted); font-size:0.9rem;" id="game-progress-info">Vòng chơi đang diễn ra (8 câu hỏi)</p>
+        </div>
+        <button id="btn-force-end" class="btn-danger">
+          ⏹ Kết Thúc Trò Chơi
+        </button>
+      </div>
+
+      <!-- Current Question Peek for Teacher -->
+      <div style="background:#f4f8f6; border-left:4px solid var(--primary); padding:12px 16px; border-radius:8px; margin-bottom:16px;">
+        <div style="font-weight:700; color:var(--primary-dark); font-size:0.9rem;">BỘ CÂU HỎI HIỆN TẠI:</div>
+        <div style="font-weight:600; font-size:1.05rem; margin-top:4px;" id="teacher-q-preview">English Practice Exercise: The Animal Kingdom (8 câu)</div>
+      </div>
+
+      <!-- Students Table -->
+      <div class="dashboard-table-wrap">
+        <table class="dashboard-table">
+          <thead>
+            <tr>
+              <th>Học Sinh</th>
+              <th>Điểm Số</th>
+              <th>Tiến Độ</th>
+              <th>Đúng / Sai</th>
+              <th>% Đúng</th>
+              <th>Trạng Thái</th>
+            </tr>
+          </thead>
+          <tbody id="teacher-monitoring-tbody">
+            <!-- Dynamically populated -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Summary Section -->
+    <div id="view-summary" class="card" style="display:none;">
+      <h2 style="text-align:center; color:var(--primary-dark); font-size:1.8rem; margin-bottom:8px;">Bảng Tổng Kết Chung Cuộc 🏆</h2>
+      <p style="text-align:center; color:var(--text-muted); margin-bottom:24px;">Các chú ếch đã hoàn thành xuất sắc nhiệm vụ bắt muỗi!</p>
+
+      <div class="dashboard-table-wrap">
+        <table class="dashboard-table">
+          <thead>
+            <tr>
+              <th>Hạng</th>
+              <th>Học Sinh</th>
+              <th>Điểm Số</th>
+              <th>Số Câu Đúng</th>
+              <th>Số Câu Sai</th>
+            </tr>
+          </thead>
+          <tbody id="summary-tbody">
+            <!-- Dynamically populated -->
+          </tbody>
+        </table>
+      </div>
+
+      <div style="display:flex; justify-content:center; gap:16px; margin-top:24px;">
+        <button id="btn-export-csv" class="btn-secondary">
+          📥 Tải Kết Quả CSV
+        </button>
+        <button id="btn-play-again" class="btn-primary">
+          🔄 Chơi Lại Vòng Mới
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="sdk.js"></script>
+  <script src="content-loader.js"></script>
+  <script src="transport.js"></script>
+  <script src="room-controller.js"></script>
+  <script src="teacher.js"></script>
+</body>
+</html>
+
+
+
+
+

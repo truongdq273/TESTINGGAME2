@@ -1,0 +1,482 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; media-src 'self' data:; connect-src 'self' ws: wss: https://docs.google.com https://raw.githubusercontent.com https://script.google.com;">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Ếch Bắt Muỗi</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #game-stage {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      max-width: 960px;
+      max-height: 600px;
+      background: url('assets/bg-pond.png') no-repeat center center;
+      background-size: cover;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    /* Top HUD */
+    .game-hud {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 16px;
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(4px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      z-index: 10;
+    }
+
+    .hud-stat {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 800;
+      font-size: 1rem;
+      color: #1e6336;
+    }
+
+    .hud-btn {
+      background: #eef6f0;
+      border: 1px solid #bce1c9;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+
+    /* Question Banner */
+    .question-banner {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 16px;
+      padding: 12px 20px;
+      margin: 8px 16px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+      text-align: center;
+      border: 3px solid #759647;
+      z-index: 10;
+      transition: all 0.3s;
+    }
+
+    .question-badge {
+      display: inline-block;
+      background: #f8a11b;
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 2px 10px;
+      border-radius: 12px;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+    }
+
+    .question-text {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #1a3c25;
+      line-height: 1.35;
+    }
+
+    /* Pond Arena */
+    .pond-arena {
+      position: relative;
+      flex: 1;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    /* Frog Container */
+    .frog-container {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 170px;
+      height: 170px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 5;
+    }
+
+    .lily-pad {
+      position: absolute;
+      bottom: 0;
+      width: 190px;
+      height: 90px;
+      z-index: 1;
+      filter: drop-shadow(0 6px 6px rgba(0,0,0,0.25));
+    }
+
+    .frog-sprite {
+      position: relative;
+      width: 150px;
+      height: 150px;
+      z-index: 2;
+      transition: transform 0.2s;
+    }
+
+    /* Frog Tongue */
+    .frog-tongue {
+      position: absolute;
+      left: 50%;
+      top: 48%;
+      height: 14px;
+      background: #ff5252;
+      border: 2px solid #d32f2f;
+      border-radius: 7px;
+      transform-origin: left center;
+      width: 0;
+      opacity: 0;
+      z-index: 8;
+      transition: width 0.22s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    }
+
+    .frog-tongue-tip {
+      position: absolute;
+      right: -8px;
+      top: -5px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #ff5252;
+      border: 2px solid #d32f2f;
+    }
+
+    /* Mosquito Container */
+    .mosquito-container {
+      position: absolute;
+      top: 25px;
+      right: 18%;
+      width: 60px;
+      height: 60px;
+      z-index: 6;
+      transition: all 0.4s ease-out;
+      animation: buzzAround 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes buzzAround {
+      0% { transform: translate(0, 0) rotate(-3deg); }
+      30% { transform: translate(-25px, 15px) rotate(5deg); }
+      70% { transform: translate(20px, -12px) rotate(-4deg); }
+      100% { transform: translate(-10px, 20px) rotate(6deg); }
+    }
+
+    .mosquito-svg {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+    }
+
+    /* Tears when crying */
+    .tear-drop {
+      position: absolute;
+      width: 12px;
+      height: 18px;
+      background: #4fc3f7;
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      opacity: 0;
+      z-index: 9;
+    }
+
+    .tear-left { left: 45px; top: 50px; }
+    .tear-right { right: 45px; top: 50px; }
+
+    .crying .tear-drop {
+      animation: dripTear 0.8s infinite;
+    }
+
+    @keyframes dripTear {
+      0% { opacity: 0; transform: translateY(0) scale(0.6); }
+      40% { opacity: 1; transform: translateY(10px) scale(1); }
+      100% { opacity: 0; transform: translateY(35px) scale(0.8); }
+    }
+
+    /* Options Panel */
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      padding: 8px 16px 14px;
+      z-index: 10;
+    }
+
+    .option-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.94);
+      border: 3px solid #759647;
+      border-radius: 14px;
+      padding: 10px 14px;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #203605;
+      cursor: pointer;
+      text-align: left;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+      transition: all 0.18s;
+      min-height: 52px;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      background: #ffffff;
+      border-color: #f8a11b;
+      box-shadow: 0 6px 14px rgba(248, 161, 27, 0.3);
+    }
+
+    .option-badge {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #759647;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+
+    .option-text {
+      flex: 1;
+      line-height: 1.25;
+    }
+
+    /* Option States */
+    .option-btn.selected {
+      border-color: #f8a11b;
+      background: #fff9e6;
+    }
+
+    .option-btn.correct {
+      background: #d4edda !important;
+      border-color: #28a745 !important;
+      color: #155724 !important;
+    }
+
+    .option-btn.correct .option-badge {
+      background: #28a745 !important;
+    }
+
+    .option-btn.incorrect {
+      background: #f8d7da !important;
+      border-color: #dc3545 !important;
+      color: #721c24 !important;
+    }
+
+    .option-btn.incorrect .option-badge {
+      background: #dc3545 !important;
+    }
+
+    .option-btn:disabled {
+      cursor: default;
+    }
+
+    /* Feedback Banner */
+    .feedback-overlay {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.8);
+      background: rgba(255, 255, 255, 0.96);
+      border-radius: 20px;
+      padding: 16px 28px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      text-align: center;
+      z-index: 20;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .feedback-overlay.active {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .feedback-title {
+      font-size: 1.5rem;
+      font-weight: 900;
+      margin-bottom: 4px;
+    }
+
+    .feedback-title.correct { color: #28a745; }
+    .feedback-title.incorrect { color: #dc3545; }
+
+    .feedback-sub {
+      font-size: 0.95rem;
+      color: #555;
+    }
+
+    @media (max-width: 600px) {
+      .question-text { font-size: 1rem; }
+      .options-grid { grid-template-columns: 1fr; gap: 6px; padding: 6px 12px 10px; }
+      .option-btn { min-height: 44px; padding: 6px 10px; font-size: 0.9rem; }
+      .frog-container { width: 140px; height: 140px; bottom: 5px; }
+      .lily-pad { width: 150px; height: 75px; }
+      .frog-sprite { width: 120px; height: 120px; }
+    }
+  </style>
+</head>
+<body>
+  <div id="game-stage">
+    <!-- Top HUD -->
+    <div class="game-hud">
+      <div class="hud-stat">
+        <span>🐸</span>
+        <span id="hud-question-index">Câu 1/8</span>
+      </div>
+      <div class="hud-stat">
+        <span>⭐</span>
+        <span id="hud-score">0 điểm</span>
+      </div>
+      <button class="hud-btn" id="btn-audio-toggle" title="Bật/Tắt âm thanh">🔊</button>
+    </div>
+
+    <!-- Question Box -->
+    <div class="question-banner">
+      <div class="question-badge" id="question-badge">Câu hỏi trắc nghiệm</div>
+      <div class="question-text" id="question-prompt">Đang tải câu hỏi...</div>
+    </div>
+
+    <!-- Arena -->
+    <div class="pond-arena" id="pond-arena">
+      <!-- Mosquito -->
+      <div class="mosquito-container" id="mosquito">
+        <svg class="mosquito-svg" viewBox="0 0 100 100">
+          <!-- Wings -->
+          <ellipse cx="40" cy="30" rx="22" ry="10" fill="rgba(186, 229, 233, 0.85)" stroke="#69c5cc" stroke-width="2" transform="rotate(-30 40 30)"/>
+          <ellipse cx="60" cy="30" rx="22" ry="10" fill="rgba(186, 229, 233, 0.85)" stroke="#69c5cc" stroke-width="2" transform="rotate(30 60 30)"/>
+          <!-- Body -->
+          <ellipse cx="50" cy="55" rx="12" ry="24" fill="#203605"/>
+          <!-- Stripes -->
+          <line x1="42" y1="50" x2="58" y2="50" stroke="#f8a11b" stroke-width="2"/>
+          <line x1="40" y1="60" x2="60" y2="60" stroke="#f8a11b" stroke-width="2"/>
+          <line x1="42" y1="70" x2="58" y2="70" stroke="#f8a11b" stroke-width="2"/>
+          <!-- Head -->
+          <circle cx="50" cy="34" r="10" fill="#203605"/>
+          <!-- Big Eyes -->
+          <circle cx="45" cy="30" r="4" fill="#fff"/>
+          <circle cx="45" cy="30" r="2" fill="#000"/>
+          <circle cx="55" cy="30" r="4" fill="#fff"/>
+          <circle cx="55" cy="30" r="2" fill="#000"/>
+          <!-- Stinger Needle -->
+          <line x1="50" y1="24" x2="50" y2="10" stroke="#111" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- Legs -->
+          <path d="M38 52 Q25 45 20 60 M38 60 Q22 60 18 75 M62 52 Q75 45 80 60 M62 60 Q78 60 82 75" stroke="#203605" stroke-width="2" fill="none"/>
+        </svg>
+      </div>
+
+      <!-- Frog on Lily Pad -->
+      <div class="frog-container" id="frog-box">
+        <!-- Lily Pad -->
+        <img src="assets/leaf.svg" class="lily-pad" alt="Lá sen" />
+
+        <!-- Frog Sprite -->
+        <svg class="frog-sprite" id="frog-svg" viewBox="0 0 200 200">
+          <!-- Body -->
+          <ellipse cx="100" cy="135" rx="65" ry="50" fill="#759647" stroke="#203605" stroke-width="3"/>
+          <ellipse cx="100" cy="142" rx="45" ry="35" fill="#f8d547"/>
+          <!-- Legs -->
+          <ellipse cx="40" cy="155" rx="25" ry="18" fill="#457802" stroke="#203605" stroke-width="3"/>
+          <ellipse cx="160" cy="155" rx="25" ry="18" fill="#457802" stroke="#203605" stroke-width="3"/>
+          <!-- Feet -->
+          <circle cx="30" cy="170" r="10" fill="#457802"/>
+          <circle cx="170" cy="170" r="10" fill="#457802"/>
+          <!-- Head -->
+          <ellipse cx="100" cy="95" rx="55" ry="42" fill="#88a002" stroke="#203605" stroke-width="3"/>
+          <!-- Cheeks -->
+          <circle cx="62" cy="105" r="10" fill="#ff7372" opacity="0.6"/>
+          <circle cx="138" cy="105" r="10" fill="#ff7372" opacity="0.6"/>
+          <!-- Eyes -->
+          <g id="frog-eyes-normal">
+            <circle cx="68" cy="62" r="18" fill="#fff" stroke="#203605" stroke-width="3"/>
+            <circle cx="70" cy="62" r="8" fill="#203605"/>
+            <circle cx="73" cy="59" r="3" fill="#fff"/>
+            <circle cx="132" cy="62" r="18" fill="#fff" stroke="#203605" stroke-width="3"/>
+            <circle cx="130" cy="62" r="8" fill="#203605"/>
+            <circle cx="133" cy="59" r="3" fill="#fff"/>
+          </g>
+          <!-- Crying Eyes (Hidden by default) -->
+          <g id="frog-eyes-crying" style="display:none;">
+            <path d="M52 64 Q68 50 84 64" stroke="#203605" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <path d="M116 64 Q132 50 148 64" stroke="#203605" stroke-width="4" fill="none" stroke-linecap="round"/>
+          </g>
+          <!-- Mouth Normal -->
+          <path id="frog-mouth-normal" d="M75 112 Q100 128 125 112" stroke="#203605" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <!-- Mouth Open for Tongue -->
+          <ellipse id="frog-mouth-open" cx="100" cy="112" rx="14" ry="10" fill="#203605" style="display:none;"/>
+          <!-- Mouth Sad -->
+          <path id="frog-mouth-sad" d="M78 122 Q100 106 122 122" stroke="#203605" stroke-width="4" fill="none" stroke-linecap="round" style="display:none;"/>
+        </svg>
+
+        <!-- Tongue -->
+        <div class="frog-tongue" id="frog-tongue">
+          <div class="frog-tongue-tip"></div>
+        </div>
+
+        <!-- Tears -->
+        <div class="tear-drop tear-left" id="tear-l"></div>
+        <div class="tear-drop tear-right" id="tear-r"></div>
+      </div>
+    </div>
+
+    <!-- Options -->
+    <div class="options-grid" id="options-container">
+      <button class="option-btn" data-id="a">
+        <span class="option-badge">A</span>
+        <span class="option-text">Lựa chọn A</span>
+      </button>
+      <button class="option-btn" data-id="b">
+        <span class="option-badge">B</span>
+        <span class="option-text">Lựa chọn B</span>
+      </button>
+      <button class="option-btn" data-id="c">
+        <span class="option-badge">C</span>
+        <span class="option-text">Lựa chọn C</span>
+      </button>
+      <button class="option-btn" data-id="d">
+        <span class="option-badge">D</span>
+        <span class="option-text">Lựa chọn D</span>
+      </button>
+    </div>
+
+    <!-- Feedback Overlay -->
+    <div class="feedback-overlay" id="feedback-overlay">
+      <div class="feedback-title" id="feedback-title">Chính xác! 🎯</div>
+      <div class="feedback-sub" id="feedback-sub">Lions are the King of the Jungle</div>
+    </div>
+  </div>
+
+  <script src="sdk.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
+
+
+
+

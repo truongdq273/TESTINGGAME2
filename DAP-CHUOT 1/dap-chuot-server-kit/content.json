@@ -1,0 +1,208 @@
+{
+  "schemaVersion": 1,
+  "title": "House & Rooms · 8 câu hỏi",
+  "questions": [
+    {
+      "id": "house-001",
+      "type": "single-choice",
+      "prompt": "Where is the TV?",
+      "options": [
+        {
+          "id": "a",
+          "text": "In the kitchen"
+        },
+        {
+          "id": "b",
+          "text": "In the living room"
+        },
+        {
+          "id": "c",
+          "text": "In the bathroom"
+        },
+        {
+          "id": "d",
+          "text": "In the garden"
+        }
+      ],
+      "points": 10,
+      "correctOptionId": "b"
+    },
+    {
+      "id": "house-002",
+      "type": "single-choice",
+      "prompt": "How many bedrooms does your house have?",
+      "options": [
+        {
+          "id": "a",
+          "text": "One"
+        },
+        {
+          "id": "b",
+          "text": "Two"
+        },
+        {
+          "id": "c",
+          "text": "Three"
+        },
+        {
+          "id": "d",
+          "text": "Four"
+        }
+      ],
+      "points": 10,
+      "correctOptionId": "b"
+    },
+    {
+      "id": "house-003",
+      "type": "single-choice",
+      "prompt": "What is in the kitchen?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Bed"
+        },
+        {
+          "id": "b",
+          "text": "Sofa"
+        },
+        {
+          "id": "c",
+          "text": "Fridge"
+        },
+        {
+          "id": "d",
+          "text": "TV"
+        }
+      ],
+      "points": 10,
+      "correctOptionId": "c"
+    },
+    {
+      "id": "house-004",
+      "type": "single-choice",
+      "prompt": "Which room is for sleeping?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Bathroom"
+        },
+        {
+          "id": "b",
+          "text": "Bedroom"
+        },
+        {
+          "id": "c",
+          "text": "Living room"
+        },
+        {
+          "id": "d",
+          "text": "Kitchen"
+        }
+      ],
+      "points": 10,
+      "correctOptionId": "b"
+    },
+    {
+      "id": "house-005",
+      "type": "single-choice",
+      "prompt": "Do you have a garden?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Yes, I do"
+        },
+        {
+          "id": "b",
+          "text": "No, I don’t"
+        },
+        {
+          "id": "c",
+          "text": "Sometimes"
+        },
+        {
+          "id": "d",
+          "text": "Maybe"
+        }
+      ],
+      "points": 10,
+      "correctOptionId": "a"
+    },
+    {
+      "id": "house-006",
+      "type": "single-choice",
+      "prompt": "What is your favorite room?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Bedroom"
+        },
+        {
+          "id": "b",
+          "text": "Kitchen"
+        },
+        {
+          "id": "c",
+          "text": "Bathroom"
+        },
+        {
+          "id": "d",
+          "text": "Garage"
+        }
+      ],
+      "points": 10,
+      "correctOptionId": "a"
+    },
+    {
+      "id": "house-007",
+      "type": "single-choice",
+      "prompt": "Is your house big or small?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Big"
+        },
+        {
+          "id": "b",
+          "text": "Small"
+        },
+        {
+          "id": "c",
+          "text": "Tall"
+        },
+        {
+          "id": "d",
+          "text": "Short"
+        }
+      ],
+      "points": 10,
+      "correctOptionId": "a"
+    },
+    {
+      "id": "house-008",
+      "type": "single-choice",
+      "prompt": "Who do you live with?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Alone"
+        },
+        {
+          "id": "b",
+          "text": "With my family"
+        },
+        {
+          "id": "c",
+          "text": "With my friends"
+        },
+        {
+          "id": "d",
+          "text": "With my teacher"
+        }
+      ],
+      "points": 10,
+      "correctOptionId": "b"
+    }
+  ],
+  "sourceFetchedAt": 1789094110304,
+  "sourceDocument": "https://docs.google.com/document/d/17PWP2to6pRQjXNXLPh8nEitZeHh2T3GPxqJCHW7qwS4/edit"
+}

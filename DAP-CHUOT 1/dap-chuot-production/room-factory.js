@@ -1,0 +1,4 @@
+import {runtimeConfig} from './runtime-config.js';
+export function ranks(players){const sorted=[...players].sort((a,b)=>b.score-a.score||a.playerId.localeCompare(b.playerId));return sorted.map(p=>({playerId:p.playerId,name:p.name,score:p.score,rank:sorted.findIndex(x=>x.score===p.score)+1}))}
+export async function openTeacher(identity,onChange,onPresence){if(runtimeConfig.mode==='server'){const {ServerTeacherRoom}=await import('./server-room.js');return ServerTeacherRoom.open(identity,onChange,onPresence)}const {TeacherRoom}=await import('./room-controller.js');return new TeacherRoom(identity.code,identity.id,onChange)}
+export async function openStudent(code,player,onSnapshot,onError,onPresence){const module=runtimeConfig.mode==='server'?await import('./server-room.js'):await import('./room-controller.js');const Room=module.ServerStudentRoom||module.StudentRoom;return new Room(code,player,onSnapshot,onError,onPresence)}

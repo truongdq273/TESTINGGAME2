@@ -1,0 +1,5 @@
+let context;let muted=localStorage.getItem('dap-chuot-muted')==='true';
+export function unlock(){context ||= new (window.AudioContext||window.webkitAudioContext)();context.resume();}
+export function isMuted(){return muted}
+export function toggleMute(){muted=!muted;localStorage.setItem('dap-chuot-muted',String(muted));if(!muted)unlock();return muted}
+export function sfx(kind){if(muted||!context)return;const patterns={pop:[[440,0,.09],[700,.07,.1]],correct:[[523,0,.12],[659,.12,.12],[784,.24,.22]],hit:[[170,0,.1],[85,.06,.18],[1046,.16,.15]],miss:[[330,0,.14],[190,.12,.2]],win:[[523,0,.18],[659,.18,.18],[784,.36,.18],[1046,.54,.5]],tap:[[600,0,.06]]};for(const [freq,delay,duration] of patterns[kind]||patterns.tap){const oscillator=context.createOscillator(),gain=context.createGain(),time=context.currentTime+delay;oscillator.type=kind==='hit'?'triangle':'sine';oscillator.frequency.setValueAtTime(freq,time);gain.gain.setValueAtTime(0,time);gain.gain.linearRampToValueAtTime(.13,time+.01);gain.gain.exponentialRampToValueAtTime(.001,time+duration);oscillator.connect(gain).connect(context.destination);oscillator.start(time);oscillator.stop(time+duration+.03)}}

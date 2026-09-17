@@ -1,0 +1,266 @@
+{
+  "schemaVersion": 1,
+  "title": "Space & Astronomy (Vũ trụ & Hệ Mặt trời)",
+  "questions": [
+    {
+      "id": "q-01",
+      "type": "single-choice",
+      "prompt": "Which theory is most widely accepted by scientists to explain the formation of the Universe?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Steady State Theory"
+        },
+        {
+          "id": "b",
+          "text": "Big Bang Theory"
+        },
+        {
+          "id": "c",
+          "text": "Theory of Relativity"
+        },
+        {
+          "id": "d",
+          "text": "Multiverse Theory"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "The Big Bang Theory suggests the universe began from a singularity about 13.8 billion years ago and continues to expand.",
+      "points": 10
+    },
+    {
+      "id": "q-02",
+      "type": "single-choice",
+      "prompt": "What is the name of the galaxy in which our Solar System is located?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Andromeda Galaxy"
+        },
+        {
+          "id": "b",
+          "text": "Triangulum Galaxy"
+        },
+        {
+          "id": "c",
+          "text": "Milky Way"
+        },
+        {
+          "id": "d",
+          "text": "Cartwheel Galaxy"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "The Solar System is located in a spiral arm of the Milky Way galaxy.",
+      "points": 10
+    },
+    {
+      "id": "q-03",
+      "type": "single-choice",
+      "prompt": "Which planet is the largest in our Solar System?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Saturn"
+        },
+        {
+          "id": "b",
+          "text": "Jupiter"
+        },
+        {
+          "id": "c",
+          "text": "Neptune"
+        },
+        {
+          "id": "d",
+          "text": "Mars"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "Jupiter is the largest planet and could fit more than 1,300 Earths inside it.",
+      "points": 10
+    },
+    {
+      "id": "q-04",
+      "type": "single-choice",
+      "prompt": "Which of the following units is commonly used to measure distances between stars in the Universe?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Astronomical Unit (AU)"
+        },
+        {
+          "id": "b",
+          "text": "Kilometer (km)"
+        },
+        {
+          "id": "c",
+          "text": "Light-year"
+        },
+        {
+          "id": "d",
+          "text": "Nautical mile"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "A light-year is the distance light travels in one year (about 9.46 trillion km).",
+      "points": 10
+    },
+    {
+      "id": "q-05",
+      "type": "single-choice",
+      "prompt": "Which planet is known as the \"Red Planet\" due to iron oxide on its surface?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Venus"
+        },
+        {
+          "id": "b",
+          "text": "Jupiter"
+        },
+        {
+          "id": "c",
+          "text": "Mars"
+        },
+        {
+          "id": "d",
+          "text": "Mercury"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "Iron oxide (rust) on the surface of Mars gives it its characteristic red color.",
+      "points": 10
+    },
+    {
+      "id": "q-06",
+      "type": "single-choice",
+      "prompt": "Which astronomical object has such a strong gravitational pull that even light cannot escape from it?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Neutron Star"
+        },
+        {
+          "id": "b",
+          "text": "Black Hole"
+        },
+        {
+          "id": "c",
+          "text": "White Dwarf"
+        },
+        {
+          "id": "d",
+          "text": "Protostar"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "Black holes have an extremely dense concentration of mass, creating a gravitational field that exceeds the speed of light.",
+      "points": 10
+    },
+    {
+      "id": "q-07",
+      "type": "single-choice",
+      "prompt": "Which planet is the hottest in the Solar System, even though it is not the closest to the Sun?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Mercury"
+        },
+        {
+          "id": "b",
+          "text": "Venus"
+        },
+        {
+          "id": "c",
+          "text": "Mars"
+        },
+        {
+          "id": "d",
+          "text": "Jupiter"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "Venus is the hottest planet (around 465°C) due to a runaway greenhouse effect from its thick CO2 atmosphere.",
+      "points": 10
+    },
+    {
+      "id": "q-08",
+      "type": "single-choice",
+      "prompt": "What are the primary gases that compose the Sun and most stars?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Oxygen and Nitrogen"
+        },
+        {
+          "id": "b",
+          "text": "Hydrogen and Helium"
+        },
+        {
+          "id": "c",
+          "text": "Carbon Dioxide and Methane"
+        },
+        {
+          "id": "d",
+          "text": "Argon and Neon"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "Hydrogen makes up about 73% and Helium about 25% of the Sun's mass.",
+      "points": 10
+    },
+    {
+      "id": "q-09",
+      "type": "single-choice",
+      "prompt": "Approximately how many days does it take for the Moon to complete one orbit around Earth?",
+      "options": [
+        {
+          "id": "a",
+          "text": "365 days"
+        },
+        {
+          "id": "b",
+          "text": "24 hours"
+        },
+        {
+          "id": "c",
+          "text": "About 29.5 days"
+        },
+        {
+          "id": "d",
+          "text": "7 days"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "The lunar cycle (from one full moon to the next) lasts approximately 29.5 days.",
+      "points": 10
+    },
+    {
+      "id": "q-10",
+      "type": "single-choice",
+      "prompt": "Which planet in the Solar System is most famous for its extensive and bright system of ice and dust rings?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Uranus"
+        },
+        {
+          "id": "b",
+          "text": "Saturn"
+        },
+        {
+          "id": "c",
+          "text": "Neptune"
+        },
+        {
+          "id": "d",
+          "text": "Earth"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "Saturn features the most magnificent and extensive ring system, composed of ice particles and rock debris.",
+      "points": 10
+    }
+  ]
+}

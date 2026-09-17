@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Phi Thuyền Học Sinh - Bắn Gà Vũ Trụ</title>
+  <link rel="stylesheet" href="./styles.css">
+  <style>
+    /* Avatar Selection Grid */
+    .avatar-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .avatar-choice {
+      border: 3px solid #3c3080;
+      border-radius: 16px;
+      padding: 10px 6px;
+      text-align: center;
+      cursor: pointer;
+      background: rgba(19, 14, 48, 0.6);
+      transition: all 0.2s;
+    }
+
+    .avatar-choice:hover {
+      border-color: #ffd166;
+      transform: translateY(-2px);
+    }
+
+    .avatar-choice.selected {
+      border-color: #06d6a0;
+      background: rgba(6, 214, 160, 0.15);
+      box-shadow: 0 0 15px rgba(6, 214, 160, 0.4);
+    }
+
+    .avatar-choice img {
+      width: 54px;
+      height: 54px;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    .avatar-name {
+      font-size: 12px;
+      font-weight: 700;
+      margin-top: 6px;
+      color: #cbd5e1;
+    }
+
+    /* Iframe Container */
+    #iframe-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 100;
+      background: #0b081e;
+      display: none;
+    }
+
+    #game-iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+
+    /* Floating Student HUD on top of iframe */
+    .floating-student-hud {
+      position: fixed;
+      top: 14px;
+      right: 16px;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(16, 11, 44, 0.85);
+      backdrop-filter: blur(8px);
+      border: 1px solid #4a3b9f;
+      border-radius: 30px;
+      padding: 6px 14px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+    }
+
+    .hud-rank-badge {
+      background: #ffd166;
+      color: #0a071b;
+      font-weight: 900;
+      font-size: 12px;
+      padding: 3px 8px;
+      border-radius: 12px;
+    }
+
+    .hud-player-name {
+      font-weight: 800;
+      font-size: 14px;
+      color: #ffffff;
+    }
+
+    .hud-drawer-btn {
+      background: #2b216d;
+      border: 1px solid #5a4abf;
+      color: #ffffff;
+      padding: 4px 10px;
+      border-radius: 14px;
+      font-size: 12px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    /* Leaderboard Slide Drawer */
+    .drawer-overlay {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 320px;
+      height: 100%;
+      background: rgba(16, 11, 44, 0.95);
+      backdrop-filter: blur(10px);
+      border-left: 2px solid #4a3b9f;
+      z-index: 300;
+      transform: translateX(100%);
+      transition: transform 0.3s ease-out;
+      box-shadow: -10px 0 30px rgba(0,0,0,0.7);
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    .drawer-overlay.open {
+      transform: translateX(0);
+    }
+
+    /* Confetti canvas */
+    #confetti-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 999;
+      display: none;
+    }
+
+    .protocol-warning {
+      background: rgba(239, 71, 111, 0.2);
+      border: 2px solid #ef476f;
+      border-radius: 12px;
+      padding: 12px 18px;
+      margin-bottom: 20px;
+      color: #ffd166;
+      font-size: 14px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <header class="app-header" id="student-header">
+    <div class="brand-container">
+      <img src="./assets/edupia-logo.png" alt="Edupia Tutor" class="brand-logo">
+      <div>
+        <div class="brand-title">PHI HÀNH ĐOÀN HỌC SINH</div>
+        <div class="brand-subtitle">Đấu Trường Bắn Gà Vũ Trụ</div>
+      </div>
+    </div>
+  </header>
+
+  <canvas id="confetti-canvas"></canvas>
+
+  <main class="container" id="student-main">
+    <div id="protocol-warning-banner" class="protocol-warning">
+      ⚠️ <strong>Cảnh báo giao thức:</strong> Bạn đang mở trang web bằng file:// trực tiếp. Để kết nối phòng học và nạp câu hỏi, vui lòng chạy web server: <code>python -m http.server 8080</code> và truy cập bằng <a href="http://localhost:8080/student.html" style="color: #4cc9f0; font-weight: bold;">http://localhost:8080/student.html</a>.
+    </div>
+
+    <!-- Screen 1: Join Form -->
+    <section class="card" id="join-form-card">
+      <h2 class="card-title">🚀 Nhập Trạm Đăng Ký Phi Hành Gia</h2>
+      
+      <div class="form-group">
+        <label class="form-label" for="input-room-code">MÃ PHÒNG HỌC (6 ký tự):</label>
+        <input type="text" id="input-room-code" class="form-input" placeholder="Ví dụ: GAVU88" maxlength="6" style="text-transform: uppercase; font-weight: 800; letter-spacing: 2px;">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="input-player-name">TÊN CỦA BẠN:</label>
+        <input type="text" id="input-player-name" class="form-input" placeholder="Nhập tên của em (Ví dụ: Minh Khang, Bảo Ngọc...)" maxlength="20">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">CHỌN NHÂN VẬT PHI THUYỀN:</label>
+        <div class="avatar-grid">
+          <div class="avatar-choice selected" data-avatar="avatar-cadet-red.png">
+            <img src="./assets/avatar-cadet-red.png" alt="Phi hành gia Đỏ">
+            <div class="avatar-name">Đội Đỏ 🚀</div>
+          </div>
+          <div class="avatar-choice" data-avatar="avatar-cadet-yellow.png">
+            <img src="./assets/avatar-cadet-yellow.png" alt="Phi hành gia Vàng">
+            <div class="avatar-name">Đội Vàng 🌟</div>
+          </div>
+          <div class="avatar-choice" data-avatar="chicken.png">
+            <img src="./assets/chicken.png" alt="Gà Thần Tốc">
+            <div class="avatar-name">Gà Thần ⚡</div>
+          </div>
+          <div class="avatar-choice" data-avatar="spaceship.png">
+            <img src="./assets/spaceship.png" alt="Tàu Vũ Trụ">
+            <div class="avatar-name">Chiến Hạm 🛸</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="join-error-msg" style="color: #ef476f; font-size: 14px; font-weight: 700; margin-bottom: 14px; display: none;"></div>
+
+      <button class="btn btn-success" id="btn-join-room" style="width: 100%; font-size: 18px;">
+        VÀO PHÒNG CHIẾN ĐẤU ➜
+      </button>
+    </section>
+
+    <!-- Screen 2: Waiting Lobby -->
+    <section class="card" id="waiting-lobby-card" style="display: none; text-align: center;">
+      <div style="font-size: 48px; margin-bottom: 12px; animation: pulseDot 1.5s infinite alternate;">📡</div>
+      <h2 class="card-title" style="justify-content: center;">
+        PHÒNG CHỜ: <span id="lobby-room-code" style="color: #ffd166; font-family: monospace; letter-spacing: 2px;"></span>
+      </h2>
+      <p style="font-size: 16px; color: #cbd5e1; margin-bottom: 24px;">
+        Bạn đã kết nối thành công! Đang chờ cô giáo/thầy giáo bắt đầu trận đấu...
+      </p>
+
+      <div style="background: rgba(16, 11, 44, 0.7); border: 1px solid #3c3080; border-radius: 16px; padding: 18px; margin-bottom: 20px;">
+        <h3 style="font-size: 15px; color: #ffd166; margin-bottom: 12px;">Các bạn cùng phòng:</h3>
+        <div class="roster-grid" id="lobby-roster-grid"></div>
+      </div>
+
+      <div style="color: #94a3b8; font-size: 14px;">
+        💡 <em>Mẹo:</em> Khi trận đấu bắt đầu, màn hình sẽ tự động chuyển sang chế độ bắn gà vũ trụ!
+      </div>
+    </section>
+
+    <!-- Screen 3: Post-Game Summary for Student -->
+    <section class="card" id="student-summary-card" style="display: none; text-align: center;">
+      <div style="font-size: 50px; margin-bottom: 10px;">🏆 🥇 🚀</div>
+      <h2 class="card-title" style="justify-content: center; font-size: 26px;">TỔNG KẾT TRẬN ĐẤU</h2>
+      <div style="font-size: 18px; color: #ffd166; font-weight: 800; margin-bottom: 14px;" id="my-summary-score">
+        Bạn đạt: 0 điểm
+      </div>
+
+      <div class="podium-container" id="student-podium-container"></div>
+
+      <p style="font-size: 14px; color: #94a3b8; margin-top: 24px;">
+        Thầy/Cô giáo có thể mở vòng chơi mới bất cứ lúc nào!
+      </p>
+    </section>
+  </main>
+
+  <!-- Preloaded Iframe Container (Hidden during lobby, active during play) -->
+  <div id="iframe-container">
+    <iframe id="game-iframe" src="./game.html" title="Trò chơi Bắn gà Vũ trụ"></iframe>
+  </div>
+
+  <!-- Floating HUD for student while playing -->
+  <div class="floating-student-hud" id="floating-hud" style="display: none;">
+    <div class="hud-rank-badge" id="hud-my-rank">#1</div>
+    <div class="hud-player-name" id="hud-my-name">Tên</div>
+    <button class="hud-drawer-btn" id="open-drawer-btn">👥 Bảng điểm</button>
+  </div>
+
+  <!-- Classmate Leaderboard Slide Drawer -->
+  <div class="drawer-overlay" id="drawer-overlay">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+      <h3 style="color: #ffd166; font-size: 18px;">🏆 Bảng Xếp Hạng</h3>
+      <button id="close-drawer-btn" style="background: none; border: none; color: #fff; font-size: 20px; cursor: pointer;">✕</button>
+    </div>
+    <div id="drawer-lb-list" style="flex: 1; overflow-y: auto;"></div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="./content-loader.js"></script>
+  <script src="./transport.js"></script>
+  <script src="./room-controller.js"></script>
+  <script>
+    (function () {
+      'use strict';
+
+      // Protocol check
+      if (window.location.protocol === 'file:') {
+        document.getElementById('protocol-warning-banner').style.display = 'block';
+      }
+
+      // DOM Elements
+      const inputRoomCode = document.getElementById('input-room-code');
+      const inputPlayerName = document.getElementById('input-player-name');
+      const avatarChoices = document.querySelectorAll('.avatar-choice');
+      const btnJoinRoom = document.getElementById('btn-join-room');
+      const joinErrorMsg = document.getElementById('join-error-msg');
+      const joinFormCard = document.getElementById('join-form-card');
+      const waitingLobbyCard = document.getElementById('waiting-lobby-card');
+      const lobbyRoomCode = document.getElementById('lobby-room-code');
+      const lobbyRosterGrid = document.getElementById('lobby-roster-grid');
+      const iframeContainer = document.getElementById('iframe-container');
+      const gameIframe = document.getElementById('game-iframe');
+      const floatingHud = document.getElementById('floating-hud');
+      const hudMyRank = document.getElementById('hud-my-rank');
+      const hudMyName = document.getElementById('hud-my-name');
+      const openDrawerBtn = document.getElementById('open-drawer-btn');
+      const drawerOverlay = document.getElementById('drawer-overlay');
+      const closeDrawerBtn = document.getElementById('close-drawer-btn');
+      const drawerLbList = document.getElementById('drawer-lb-list');
+      const studentSummaryCard = document.getElementById('student-summary-card');
+      const mySummaryScore = document.getElementById('my-summary-score');
+      const studentPodiumContainer = document.getElementById('student-podium-container');
+      const confettiCanvas = document.getElementById('confetti-canvas');
+
+      // State
+      let selectedAvatar = 'avatar-cadet-red.png';
+      let myPlayerId = 'p_' + Date.now().toString(36) + '_' + Math.random().toString(36).substring(2, 6);
+      let myPlayerName = '';
+      let roomCode = '';
+      let studentController = null;
+      let transport = null;
+      let iframeReady = false;
+      let contentLoadedInGame = false;
+      let cachedLearnerQuestions = null;
+      let currentRoundId = '';
+      let isGameStarted = false;
+
+      // Read query params from URL
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const qRoom = urlParams.get('room');
+        const qName = urlParams.get('name');
+        if (qRoom) inputRoomCode.value = qRoom.toUpperCase();
+        if (qName) inputPlayerName.value = qName;
+      } catch (e) {}
+
+      // Avatar selection
+      avatarChoices.forEach(ch => {
+        ch.addEventListener('click', () => {
+          avatarChoices.forEach(c => c.classList.remove('selected'));
+          ch.classList.add('selected');
+          selectedAvatar = ch.dataset.avatar;
+        });
+      });
+
+      // Eagerly connect message listener for iframe
+      window.addEventListener('message', (e) => {
+        if (e.origin !== window.location.origin) return;
+        const data = e.data;
+        if (!data || typeof data !== 'object') return;
+
+        // SDK Handshake from iframe
+        if (data.type === 'gameReady') {
+          console.log('[Host] Received gameReady from iframe');
+          iframeReady = true;
+          trySendContentToGame();
+        }
+
+        // Control channel messages from game
+        if (data.type === 'classroom-control') {
+          if (data.action === 'contentAccepted') {
+            contentLoadedInGame = true;
+            if (isGameStarted) {
+              triggerStartInGame();
+            }
+          } else if (data.action === 'submitAttempt') {
+            // Forward answer attempt to Teacher authority
+            if (studentController && data.payload) {
+              studentController.submitAnswerAttempt(data.payload.questionId, data.payload.answer, data.payload.timeMs);
+            }
+          }
+        }
+      });
+
+      // Try sending learner-safe content to game iframe
+      function trySendContentToGame() {
+        if (!iframeReady || !cachedLearnerQuestions || contentLoadedInGame) return;
+        console.log('[Host] Sending loadContent to game iframe');
+        gameIframe.contentWindow.postMessage({
+          type: 'loadContent',
+          payload: { questions: cachedLearnerQuestions }
+        }, window.location.origin);
+      }
+
+      function triggerStartInGame() {
+        if (iframeReady && contentLoadedInGame) {
+          gameIframe.contentWindow.postMessage({
+            type: 'startGame'
+          }, window.location.origin);
+        }
+      }
+
+      // We now receive questions via the 'gameStarted' transport event.
+
+      // Join Room Action
+      btnJoinRoom.addEventListener('click', () => {
+        const code = inputRoomCode.value.toUpperCase().trim();
+        const name = inputPlayerName.value.trim();
+
+        if (!code || code.length < 4) {
+          joinErrorMsg.textContent = 'Vui lòng nhập đúng mã phòng (ít nhất 4 ký tự)';
+          joinErrorMsg.style.display = 'block';
+          return;
+        }
+        if (!name) {
+          joinErrorMsg.textContent = 'Vui lòng nhập tên học sinh';
+          joinErrorMsg.style.display = 'block';
+          return;
+        }
+
+        joinErrorMsg.style.display = 'none';
+        roomCode = code;
+        myPlayerName = name;
+
+        // Initialize Transport & Controller
+        transport = ClassroomTransport.create();
+        studentController = RoomController.createStudentController({
+          transport,
+          onStateReconciled: handleStateReconciliation
+        });
+
+        const player = {
+          id: myPlayerId,
+          name: myPlayerName,
+          avatar: selectedAvatar
+        };
+
+        studentController.joinRoom(roomCode, player);
+
+        // Listen for private answer results from Authority
+        transport.onEvent(envelope => {
+          if (envelope.type === 'answerResult' && envelope.payload) {
+            // Forward down to game iframe
+            gameIframe.contentWindow.postMessage({
+              type: 'classroom-control',
+              action: 'answerResult',
+              payload: envelope.payload
+            }, window.location.origin);
+          }
+        });
+
+        // Switch to lobby view
+        joinFormCard.style.display = 'none';
+        lobbyRoomCode.textContent = roomCode;
+        waitingLobbyCard.style.display = 'block';
+        hudMyName.textContent = myPlayerName;
+      });
+
+      function escapeHTML(s) {
+        if (!s) return '';
+        return String(s).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+      }
+
+      // Reconcile Room State
+      function handleStateReconciliation(snapshot) {
+        if (!snapshot) return;
+
+        // Update current round
+        currentRoundId = snapshot.roundId;
+
+        // Update Roster in Lobby
+        if (snapshot.state === 'waiting') {
+          waitingLobbyCard.style.display = 'block';
+          iframeContainer.style.display = 'none';
+          floatingHud.style.display = 'none';
+          studentSummaryCard.style.display = 'none';
+          isGameStarted = false;
+
+          lobbyRosterGrid.innerHTML = (snapshot.roster || []).map(p => `
+            <div class="player-card ${p.id === myPlayerId ? 'active' : ''}">
+              <img src="./assets/${escapeHTML(p.avatar || 'avatar-cadet-red.png')}" alt="Avatar" class="player-avatar">
+              <div class="player-info">
+                <div class="player-name">${escapeHTML(p.name)} ${p.id === myPlayerId ? '(Bạn)' : ''}</div>
+                <div class="player-status" style="color: #06d6a0;">🟢 Sẵn sàng</div>
+              </div>
+            </div>
+          `).join('');
+        } else if (snapshot.state === 'playing') {
+          // Transition into Game
+          waitingLobbyCard.style.display = 'none';
+          gameplayCard.style.display = 'block';
+          endGameCard.style.display = 'none';
+          lobbyCard.style.display = 'none';
+          iframeContainer.style.display = 'block';
+          floatingHud.style.display = 'flex';
+
+          if (snapshot.questions) {
+            cachedLearnerQuestions = snapshot.questions;
+          }
+
+          if (!isGameStarted) {
+            isGameStarted = true;
+            trySendContentToGame();
+            triggerStartInGame();
+          }
+
+          // Update floating HUD rank
+          const lb = snapshot.leaderboard || [];
+          const myEntry = lb.find(p => p.playerId === myPlayerId);
+          if (myEntry) {
+            hudMyRank.textContent = `#${myEntry.rank} (${myEntry.score}đ)`;
+          }
+
+          // Update Drawer Leaderboard
+          drawerLbList.innerHTML = lb.map(p => `
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px; border-bottom: 1px solid #2f236e; ${p.playerId === myPlayerId ? 'background: rgba(76, 201, 240, 0.15); border-radius: 8px;' : ''}">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-weight: 800; color: #ffd166;">#${p.rank}</span>
+                <img src="./assets/${escapeHTML(p.avatar || 'avatar-cadet-red.png')}" style="width: 28px; height: 28px; border-radius: 50%;">
+                <span style="font-size: 14px; font-weight: 700;">${escapeHTML(p.name)} ${p.playerId === myPlayerId ? '(Tôi)' : ''}</span>
+              </div>
+              <span style="font-weight: 800; color: #4cc9f0;">${p.score}đ</span>
+            </div>
+          `).join('');
+        } else if (snapshot.state === 'ended') {
+          // Transition into Summary
+          iframeContainer.style.display = 'none';
+          floatingHud.style.display = 'none';
+          waitingLobbyCard.style.display = 'none';
+          studentSummaryCard.style.display = 'block';
+          drawerOverlay.classList.remove('open');
+
+          const lb = snapshot.leaderboard || [];
+          const myEntry = lb.find(p => p.playerId === myPlayerId);
+          if (myEntry) {
+            mySummaryScore.textContent = `Bạn xếp Hạng #${myEntry.rank} với ${myEntry.score} điểm!`;
+            if (myEntry.rank === 1) {
+              launchConfetti();
+            }
+          }
+
+          // Podium
+          let podiumHtml = '';
+          const order = [1, 0, 2, 3];
+          order.forEach(idx => {
+            if (idx < lb.length) {
+              const p = lb[idx];
+              podiumHtml += `
+                <div class="podium-col">
+                  <div class="podium-user">
+                    <img src="./assets/${escapeHTML(p.avatar || 'avatar-cadet-red.png')}" style="width: 44px; height: 44px; border-radius: 50%; border: 2px solid #ffd166;">
+                    <div style="font-weight: 800; font-size: 14px; margin-top: 4px;">${escapeHTML(p.name)}</div>
+                    <div style="font-size: 13px; color: #4cc9f0; font-weight: 700;">${p.score} điểm</div>
+                  </div>
+                  <div class="podium-block podium-${p.rank}">
+                    <span style="font-size: 22px;">${p.rank === 1 ? '🥇' : p.rank === 2 ? '🥈' : p.rank === 3 ? '🥉' : '🎖️'}</span>
+                    <span>Hạng ${p.rank}</span>
+                  </div>
+                </div>
+              `;
+            }
+          });
+          studentPodiumContainer.innerHTML = podiumHtml;
+        }
+      }
+
+      // Drawer controls
+      openDrawerBtn.addEventListener('click', () => { drawerOverlay.classList.add('open'); });
+      closeDrawerBtn.addEventListener('click', () => { drawerOverlay.classList.remove('open'); });
+
+      // Confetti Animation on victory
+      function launchConfetti() {
+        confettiCanvas.style.display = 'block';
+        const ctx = confettiCanvas.getContext('2d');
+        let width = (confettiCanvas.width = window.innerWidth);
+        let height = (confettiCanvas.height = window.innerHeight);
+
+        const pieces = Array.from({ length: 80 }, () => ({
+          x: Math.random() * width,
+          y: Math.random() * -height,
+          size: Math.random() * 8 + 4,
+          color: ['#ffd166', '#06d6a0', '#4cc9f0', '#ef476f', '#7209b7'][Math.floor(Math.random() * 5)],
+          speedY: Math.random() * 3 + 2,
+          rot: Math.random() * 360,
+          rotSpeed: Math.random() * 4 - 2
+        }));
+
+        let frame = 0;
+        function animateConfetti() {
+          ctx.clearRect(0, 0, width, height);
+          pieces.forEach(p => {
+            p.y += p.speedY;
+            p.rot += p.rotSpeed;
+            ctx.fillStyle = p.color;
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate((p.rot * Math.PI) / 180);
+            ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+            ctx.restore();
+          });
+          frame++;
+          if (frame < 220) {
+            requestAnimationFrame(animateConfetti);
+          } else {
+            confettiCanvas.style.display = 'none';
+          }
+        }
+        animateConfetti();
+      }
+
+    })();
+  </script>
+</body>
+</html>

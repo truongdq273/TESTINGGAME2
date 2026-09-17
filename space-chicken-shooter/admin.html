@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản Trị Nguồn Câu Hỏi - Bắn Gà Vũ Trụ (Chủ Nội Dung / IT)</title>
+  <link rel="stylesheet" href="./styles.css">
+  <style>
+    .admin-badge {
+      background: #ef476f;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 6px;
+      letter-spacing: 1px;
+    }
+
+    .status-alert {
+      padding: 14px 18px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      display: none;
+    }
+
+    .status-alert.success {
+      background: rgba(6, 214, 160, 0.15);
+      border: 1px solid #06d6a0;
+      color: #06d6a0;
+    }
+
+    .status-alert.error {
+      background: rgba(239, 71, 111, 0.15);
+      border: 1px solid #ef476f;
+      color: #ef476f;
+    }
+  </style>
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand-container">
+      <img src="./assets/edupia-logo.png" alt="Edupia Tutor" class="brand-logo">
+      <div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span class="brand-title">TRUNG TÂM NỘI DUNG & IT</span>
+          <span class="admin-badge">ADMIN ONLY</span>
+        </div>
+        <div class="brand-subtitle">Quản Lý Nguồn Câu Hỏi & Hợp Đồng Dữ Liệu</div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="card" style="border-color: #ffd166;">
+      <h2 class="card-title">⚙️ Cấu Hình Nguồn Câu Hỏi Ngoài (Google Docs / Sheets / API)</h2>
+      <p style="font-size: 14px; color: #94a3b8; line-height: 1.6; margin-bottom: 20px;">
+        Trang này dành riêng cho <strong>Chủ nội dung</strong> và <strong>Đội IT</strong>. Khi cập nhật câu hỏi/đáp án tại nguồn ngoài, game sẽ tự động đọc lại phiên bản mới vào các vòng chơi kế tiếp mà <em>không cần biên dịch hay deploy lại mã nguồn game</em>.
+      </p>
+
+      <div id="status-alert" class="status-alert"></div>
+
+      <div class="form-group">
+        <label class="form-label" for="source-url-input">URL DỮ LIỆU CÂU HỎI (Endpoint JSON / CORS):</label>
+        <input type="url" id="source-url-input" class="form-input" placeholder="./content.json hoặc https://your-server.com/api/questions">
+        <small style="color: #94a3b8; font-size: 12px; margin-top: 4px; display: block;">
+          Mặc định: <code>./content.json</code> (Bộ 10 câu hỏi Thiên văn & Vũ trụ đã đóng gói sẵn).
+        </small>
+      </div>
+
+      <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+        <button class="btn btn-primary" id="btn-test-source">🔍 Kiểm Tra & Nạp Thử</button>
+        <button class="btn btn-success" id="btn-save-source">💾 Lưu Cấu Hình Nguồn</button>
+        <button class="btn btn-outline" id="btn-reset-default">🔄 Khôi Phục Nguồn Mặc Định</button>
+        <button class="btn btn-outline" id="btn-download-json">📥 Tải JSON Hiện Tại</button>
+      </div>
+    </div>
+
+    <!-- Preview of Validated Question Bank -->
+    <div class="card" id="preview-card" style="display: none;">
+      <div class="card-title" style="justify-content: space-between;">
+        <span>📋 Xem Trước Bộ Câu Hỏi Đã Xác Thực (<span id="preview-count">0</span> câu)</span>
+        <span style="font-size: 13px; color: #4cc9f0;" id="preview-hash">Hash: --</span>
+      </div>
+
+      <div id="preview-list"></div>
+    </div>
+  </main>
+
+  <script src="./content-loader.js"></script>
+  <script>
+    (function () {
+      'use strict';
+
+      const sourceUrlInput = document.getElementById('source-url-input');
+      const btnTestSource = document.getElementById('btn-test-source');
+      const btnSaveSource = document.getElementById('btn-save-source');
+      const btnResetDefault = document.getElementById('btn-reset-default');
+      const btnDownloadJson = document.getElementById('btn-download-json');
+      const statusAlert = document.getElementById('status-alert');
+      const previewCard = document.getElementById('preview-card');
+      const previewCount = document.getElementById('preview-count');
+      const previewHash = document.getElementById('preview-hash');
+      const previewList = document.getElementById('preview-list');
+
+      let currentLoadedData = null;
+
+      function showAlert(msg, isSuccess) {
+        statusAlert.className = 'status-alert ' + (isSuccess ? 'success' : 'error');
+        statusAlert.innerHTML = msg;
+        statusAlert.style.display = 'block';
+      }
+
+      // Initialize with stored or default source
+      const stored = ContentLoader.getStoredSourceConfig();
+      sourceUrlInput.value = (stored && stored.url) ? stored.url : ContentLoader.DEFAULT_FALLBACK_URL;
+
+      async function testAndLoad(url) {
+        btnTestSource.disabled = true;
+        btnTestSource.textContent = '⏳ Đang kiểm tra...';
+        try {
+          const res = await ContentLoader.loadQuestionBank({ url });
+          currentLoadedData = res;
+          showAlert(`✅ <strong>Xác thực thành công!</strong> Nạp được <strong>${res.questions.length}</strong> câu hỏi. Version: <code>${res.contentVersion}</code>`, true);
+
+          // Render Preview
+          previewCard.style.display = 'block';
+          previewCount.textContent = res.questions.length;
+          previewHash.textContent = `Hash: ${res.contentVersion}`;
+
+          function escapeHTML(s) {
+            if (!s) return '';
+            return String(s).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+          }
+
+          previewList.innerHTML = res.questions.map((q, idx) => `
+            <div style="background: rgba(19, 14, 48, 0.7); border: 1px solid #3c3080; border-radius: 12px; padding: 14px; margin-bottom: 12px;">
+              <div style="font-weight: 800; color: #ffd166; margin-bottom: 6px;">
+                #${idx + 1} [${escapeHTML(q.id)}]: ${escapeHTML(q.prompt)}
+              </div>
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; font-size: 13px; margin-bottom: 8px;">
+                ${q.options.map(opt => `
+                  <div style="padding: 6px 10px; border-radius: 6px; background: ${opt.id === q.correctOptionId ? 'rgba(6, 214, 160, 0.2)' : 'rgba(0,0,0,0.2)'}; border: 1px solid ${opt.id === q.correctOptionId ? '#06d6a0' : '#2f236e'}; color: ${opt.id === q.correctOptionId ? '#06d6a0' : '#cbd5e1'};">
+                    <strong>${escapeHTML(opt.id).toUpperCase()}:</strong> ${escapeHTML(opt.text)} ${opt.id === q.correctOptionId ? '✓' : ''}
+                  </div>
+                `).join('')}
+              </div>
+              <div style="font-size: 12px; color: #94a3b8;">
+                💡 <em>Giải thích:</em> ${q.explanation} | Điểm: ${q.points}
+              </div>
+            </div>
+          `).join('');
+
+        } catch (err) {
+          showAlert(`❌ <strong>Lỗi xác thực dữ liệu:</strong> ${err.message}`, false);
+          previewCard.style.display = 'none';
+        } finally {
+          btnTestSource.disabled = false;
+          btnTestSource.textContent = '🔍 Kiểm Tra & Nạp Thử';
+        }
+      }
+
+      // Initial auto-test
+      testAndLoad(sourceUrlInput.value);
+
+      btnTestSource.addEventListener('click', () => {
+        testAndLoad(sourceUrlInput.value.trim());
+      });
+
+      btnSaveSource.addEventListener('click', () => {
+        const val = sourceUrlInput.value.trim();
+        ContentLoader.saveStoredSourceConfig({ url: val });
+        showAlert(`💾 Đã lưu cấu hình nguồn: <code>${val}</code>. Mọi phòng học mới sẽ áp dụng nguồn này!`, true);
+      });
+
+      btnResetDefault.addEventListener('click', () => {
+        ContentLoader.saveStoredSourceConfig(null);
+        sourceUrlInput.value = ContentLoader.DEFAULT_FALLBACK_URL;
+        testAndLoad(ContentLoader.DEFAULT_FALLBACK_URL);
+        showAlert('🔄 Đã khôi phục nguồn dữ liệu mặc định.', true);
+      });
+
+      btnDownloadJson.addEventListener('click', () => {
+        if (!currentLoadedData) {
+          alert('Vui lòng kiểm tra và nạp dữ liệu trước khi tải!');
+          return;
+        }
+        const exportObj = {
+          schemaVersion: 1,
+          title: currentLoadedData.title,
+          questions: currentLoadedData.questions
+        };
+        const str = JSON.stringify(exportObj, null, 2);
+        const blob = new Blob([str], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'content.json';
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+
+    })();
+  </script>
+</body>
+</html>

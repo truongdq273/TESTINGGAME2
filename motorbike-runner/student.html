@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; media-src 'self' data: https:; font-src 'self'; connect-src 'self' https: ws: wss:; frame-src 'self'; base-uri 'none'; form-action 'self'; object-src 'none'">
+<title>Học sinh · Motorbike Runner</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="student">
+<header class="topbar"><a class="brand" href="index.html">Motorbike Runner</a>
+  <span id="conn" class="pill" role="status"></span>
+  <button id="mute" class="icon-btn" type="button" aria-pressed="false" aria-label="Tắt âm thanh">🔊</button>
+</header>
+<p id="banner" class="banner" role="alert" hidden></p>
+<main>
+  <section id="v-join" class="card narrow">
+    <h1>Vào phòng</h1>
+    <form id="join-form" class="stack">
+      <label>Mã phòng<input id="room" inputmode="text" autocapitalize="characters" autocomplete="off" maxlength="8" required></label>
+      <label>Tên của em<input id="name" autocomplete="off" maxlength="24" required></label>
+      <button class="btn primary big">Vào phòng</button>
+    </form>
+    <p id="join-error" class="error" role="alert"></p>
+  </section>
+  <section id="v-wait" class="card narrow" hidden>
+    <h1>Chào <span id="me-name"></span>!</h1>
+    <p>Phòng <strong id="me-room"></strong> · Đang chờ giáo viên bắt đầu…</p>
+    <ul id="mates" class="roster"></ul>
+  </section>
+  <section id="v-play" class="play" hidden>
+    <iframe id="game" src="game.html" sandbox="allow-scripts" title="Trò chơi" allow="autoplay"></iframe>
+    <aside id="board" class="board">
+      <button id="board-toggle" class="btn secondary board-toggle" type="button" aria-expanded="false" aria-controls="board-list">Bảng xếp hạng</button>
+      <p class="my-score">Điểm của em: <strong id="my-score">0</strong></p>
+      <ol id="board-list" class="board-list"></ol>
+    </aside>
+  </section>
+  <section id="v-end" class="card narrow" hidden>
+    <h1>Tổng kết</h1>
+    <ol id="podium" class="podium"></ol>
+    <p id="end-note" class="muted"></p>
+  </section>
+</main>
+<script src="lib/sdk.js"></script>
+<script type="module" src="student.js"></script>
+</body>
+</html>

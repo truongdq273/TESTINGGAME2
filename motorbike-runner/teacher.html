@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; media-src 'self' data: https:; font-src 'self'; connect-src 'self' https: ws: wss:; frame-src 'self'; base-uri 'none'; form-action 'self'; object-src 'none'">
+<meta name="robots" content="noindex">
+<title>Giáo viên · Motorbike Runner</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar"><a class="brand" href="index.html">Motorbike Runner</a><span id="conn" class="pill" role="status"></span></header>
+<main class="teacher">
+  <section id="v-auth" class="card" hidden>
+    <h1>Đăng nhập giáo viên</h1>
+    <form id="auth-form" class="stack"><label>Mã giáo viên<input id="auth-key" type="password" autocomplete="off" required></label><button class="btn primary">Tiếp tục</button></form>
+  </section>
+  <section id="v-create" class="card" hidden>
+    <h1>Mở phòng học</h1>
+    <p class="muted">Tạo phòng rồi đọc mã cho học sinh.</p>
+    <button id="create" class="btn primary big" type="button">Tạo phòng</button>
+  </section>
+  <section id="v-room" hidden>
+    <div class="grid-2">
+      <div class="card">
+        <p class="muted">Mã phòng</p>
+        <p id="code" class="room-code" aria-live="polite"></p>
+        <p><strong id="count">0</strong> / <span id="max">4</span> học sinh</p>
+        <ul id="roster" class="roster"></ul>
+        <div class="row">
+          <button id="start" class="btn primary" type="button" disabled>Bắt đầu</button>
+          <button id="start-stale" class="btn warn" type="button" hidden>Dùng bản đã tải để bắt đầu</button>
+          <button id="next" class="btn primary" type="button" hidden>Câu tiếp theo</button>
+          <button id="end" class="btn danger" type="button" hidden>Kết thúc</button>
+          <button id="restart" class="btn secondary" type="button" hidden>Chơi vòng mới</button>
+          <button id="csv" class="btn secondary" type="button" hidden>Tải CSV</button>
+        </div>
+        <p id="action-msg" class="error" role="alert"></p>
+      </div>
+      <div class="card">
+        <h2>Bộ câu hỏi</h2>
+        <p id="content-status" role="status"></p>
+        <button id="reload" class="btn secondary" type="button">Tải lại dữ liệu</button>
+        <details><summary>Xem trước (chỉ giáo viên thấy đáp án)</summary><ol id="preview" class="preview"></ol></details>
+      </div>
+    </div>
+    <div class="card" id="dash" hidden>
+      <div class="row between"><h2>Theo dõi lớp</h2>
+        <label class="inline">Sắp xếp <select id="sort"><option value="name">Theo tên</option><option value="score">Theo điểm</option></select></label></div>
+      <div class="table-wrap"><table class="dash"><thead><tr><th>Tên</th><th>Điểm</th><th>Tiến độ</th><th>Đúng · Sai · Hết giờ</th><th>Trạng thái</th></tr></thead><tbody id="dash-body"></tbody></table></div>
+      <div id="question-panel"></div>
+    </div>
+    <div class="card" id="summary" hidden>
+      <h2>Tổng kết</h2>
+      <ol id="podium" class="podium"></ol>
+    </div>
+  </section>
+</main>
+<script type="module" src="teacher.js"></script>
+</body>
+</html>

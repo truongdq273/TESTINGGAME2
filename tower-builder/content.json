@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "title": "Tower Builder - So sánh hơn",
+  "questions": [
+    {
+      "id": "q1",
+      "type": "single-choice",
+      "prompt": "My brother is ______ than me.",
+      "options": [
+        { "id": "a", "text": "tall" },
+        { "id": "b", "text": "taller" },
+        { "id": "c", "text": "tallest" },
+        { "id": "d", "text": "more tall" }
+      ],
+      "correctOptionId": "b"
+    },
+    {
+      "id": "q2",
+      "type": "single-choice",
+      "prompt": "This book is ______ than that one.",
+      "options": [
+        { "id": "a", "text": "interesting" },
+        { "id": "b", "text": "most interesting" },
+        { "id": "c", "text": "more interesting" },
+        { "id": "d", "text": "interestinger" }
+      ],
+      "correctOptionId": "c"
+    },
+    {
+      "id": "q3",
+      "type": "single-choice",
+      "prompt": "An elephant is ______ than a mouse.",
+      "options": [
+        { "id": "a", "text": "bigger" },
+        { "id": "b", "text": "big" },
+        { "id": "c", "text": "more big" },
+        { "id": "d", "text": "biggest" }
+      ],
+      "correctOptionId": "a"
+    },
+    {
+      "id": "q4",
+      "type": "single-choice",
+      "prompt": "This exercise is ______ than the last one.",
+      "options": [
+        { "id": "a", "text": "easy" },
+        { "id": "b", "text": "more easy" },
+        { "id": "c", "text": "easiest" },
+        { "id": "d", "text": "easier" }
+      ],
+      "correctOptionId": "d"
+    },
+    {
+      "id": "q5",
+      "type": "single-choice",
+      "prompt": "My English is ______ than it was last year.",
+      "options": [
+        { "id": "a", "text": "good" },
+        { "id": "b", "text": "better" },
+        { "id": "c", "text": "best" },
+        { "id": "d", "text": "more good" }
+      ],
+      "correctOptionId": "b"
+    }
+  ]
+}
